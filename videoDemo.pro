@@ -17,6 +17,8 @@ SOURCES += \
 
 RESOURCES += qml.qrc
 
+#INCLUDEPATH += /usr/include/arm-linux-gnueabihf
+
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
 
@@ -27,3 +29,12 @@ QML_DESIGNER_IMPORT_PATH =
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+#win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../../usr/lib/release/ -lwiringPi
+#else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../../usr/lib/debug/ -lwiringPi
+#else:unix: LIBS += -L$$PWD/../../../../usr/lib/ -lwiringPi
+
+#INCLUDEPATH += $$PWD/../../../../usr/include
+#DEPENDPATH += $$PWD/../../../../usr/include
+
+unix|win32: LIBS += -lwiringPi
