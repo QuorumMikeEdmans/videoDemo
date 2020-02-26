@@ -1,102 +1,127 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.4
+import QtQuick.Controls 1.4
 import QtMultimedia 5.0
+import quorum.stepper 1.0
 
 ApplicationWindow {
     id: window
     visible: true
-    width: 640
+    width: 800
     height: 480
     title: qsTr("Mike's Video")
 
+    TabView
+    {
+        anchors.centerIn:parent
+        width:800
+        height: 480
 
 
-    Camera {
-       id: camera
-       captureMode: Camera.CaptureVideo
+
+        Tab{
+        title: "Video"
+        id: videoTab
+        anchors.fill:parent
+            Item{
+            anchors.fill:parent
+
+                Camera {
+           id: camera
+           captureMode: Camera.CaptureVideo
 
 
-       ///////////////////////////////////////////////////////////
-       imageCapture {
-           onImageCaptured: {
-               photoPreview.source = preview
-//               stillControls.previewAvailable = true
-//               cameraUI.state = "PhotoPreview"
+           ///////////////////////////////////////////////////////////
+           imageCapture {
+               onImageCaptured: {
+                   photoPreview.source = preview
+               }
            }
-       }
 
-    }
-
-
-    VideoOutput {
-        source: camera
-//        anchors.centerIn:  parent
-        anchors.horizontalCenter: parent.horizontalcenter
-        anchors.bottom: parent.bottom
-        height: parent.height/2
-        width: parent.width/2
-        focus : visible
-
-
-    }
-
-    Rectangle {
-        id: videoButton
-        x: 481
-        y: 85
-        width: 100
-        height: 40
-        radius: 10
-        color: "#808080"
-        Text{
-            anchors.centerIn: parent
-            text:"Video"
         }
-        MouseArea {
-            anchors.fill: parent
-            width: 163
-            height: 47
-            onClicked:
-            {
-                camera.captureMode=Camera.CaptureVideo
-                camera.start()
+
+
+                VideoOutput {
+            source: camera
+            anchors.horizontalCenter: parent.horizontalcenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 5
+            height: parent.height/2-8
+            width: parent.width/2
+            focus : visible
+        }
+
+
+                Column
+                {
+                spacing: 10
+                topPadding: 40
+                x:481
+                Button{
+                    id: stillButton
+                    width: 100
+                    height: 40
+                    text: "Still"
+                    onClicked:
+                    {
+                        camera.captureMode=Camera.CaptureStillImage
+                        camera.imageCapture.captureToLocation("/home/pi/capturedImages")
+                    }
+                }
+
+                Button{
+                    id: videoButton
+                    width: 100
+                    height: 40
+                    text: "Video"
+                    onClicked:
+                        {
+                            camera.captureMode=Camera.CaptureVideo
+                            camera.start()
+                        }
+                }
+                Button{
+                    id: stepperButton
+                    width: 100
+                    height: 40
+                    text: "Stepper"
+                    onClicked:
+                    {
+                        Stepper.moveStepper(true,100,200);
+                    }
+                }
+            }
+
+                PhotoPreview {
+            id: photoPreview
+
+
+        }
 
             }
-        } // to receive focus and capture key events when visible
-    }
-
-
-    Rectangle {
-        id: stillButton
-        x: 481
-        y: 35
-        width: 100
-        height: 40
-        radius: 10
-        color: "#808080"
-        Text{
-            anchors.centerIn: parent
-            text:"Still"
         }
-        MouseArea {
-            anchors.fill: parent
-            width: 163
-            height: 47
-            onClicked:
-            {
-                camera.captureMode=Camera.CaptureStillImage
-//                camera.imageCapture.capture()
-                camera.imageCapture.captureToLocation("/home/pi/capturedImages")
+
+        Tab{
+            title:"Hello"
+            id: tab1
+            Rectangle{
+                id:greenRect
+                anchors.fill: parent
+                anchors.margins: 50
+
+               color:"green"
+               Rectangle{
+                   id:redRect
+                   width:20
+                  height: 20
+                  anchors.centerIn: parent
+
+                  color:"blue"
+               }
             }
-        } // to receive focus and capture key events when visible
+
+        }
 
     }
-    PhotoPreview {
-        id: photoPreview
-
-
-    }
-
- }
-
+}
 

@@ -13,7 +13,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+    stepper.cpp
 
 RESOURCES += qml.qrc
 
@@ -38,3 +39,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 #DEPENDPATH += $$PWD/../../../../usr/include
 
 unix|win32: LIBS += -lwiringPi
+
+HEADERS += \
+    stepper.h

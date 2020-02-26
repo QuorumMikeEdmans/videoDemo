@@ -56,7 +56,8 @@ Item {
     signal closed
     anchors.horizontalCenter: parent.horizontalcenter
     anchors.top: parent.top
-    height:parent.height/2
+    anchors.topMargin: 5
+    height:parent.height/2-8
     width: parent.width/2
 
     Image {
