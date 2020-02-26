@@ -41,7 +41,7 @@ ApplicationWindow {
         }
 
 
-                VideoOutput {
+        VideoOutput {
             source: camera
             anchors.horizontalCenter: parent.horizontalcenter
             anchors.bottom: parent.bottom
@@ -81,13 +81,33 @@ ApplicationWindow {
                         }
                 }
                 Button{
-                    id: stepperButton
+                    id: clockwise
                     width: 100
                     height: 40
-                    text: "Stepper"
+                    text: "Clockwise"
                     onClicked:
                     {
-                        Stepper.moveStepper(true,100,200);
+                        Stepper.moveStepper(true,100,500);
+                    }
+                }
+                Button{
+                    id: anticlockwise
+                    width: 100
+                    height: 40
+                    text: "Anticlockwise"
+                    onClicked:
+                    {
+                        Stepper.moveStepper(false,100,500);
+                    }
+                }
+                Button{
+                    id: fast
+                    width: 100
+                    height: 40
+                    text: "Fast"
+                    onClicked:
+                    {
+                        Stepper.moveStepper(false,100,1);
                     }
                 }
             }
