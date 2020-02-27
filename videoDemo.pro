@@ -14,7 +14,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-    stepper.cpp
+    stepper.cpp \
+    imageFileInfo.cpp
 
 RESOURCES += qml.qrc
 
@@ -41,4 +42,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 unix|win32: LIBS += -lwiringPi
 
 HEADERS += \
-    stepper.h
+    stepper.h \
+    imageFileInfo.h

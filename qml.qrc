@@ -2,5 +2,11 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>PhotoPreview.qml</file>
+        <file>DemoTab.qml</file>
+        <file>ManualControl.qml</file>
+        <file>ColumnVideoStillImages.qml</file>
+        <file>CycleWindow.qml</file>
+        <file>VideoCameraWindow.qml</file>
+        <file>ImageBrowser.qml</file>
     </qresource>
 </RCC>
