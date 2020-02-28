@@ -16,55 +16,60 @@ Item{
         spacing: 10
         topPadding: 40
         x:481
-        Button{
-            id: stillButton
-            width: 100
-            height: 40
-            text: "Still"
-            onClicked:
-            {
-                videoWindow.captureImage()
-            }
+
+        property bool clockwise: clockwiseButton.checked
+        property int rotationDegrees: spinBox.value
+
+        CheckBox {
+            id: checkEnableMotor
+            text: qsTr("Enable Motor")
         }
-        Button{
-            id: videoButton
-            width: 100
-            height: 40
-            text: "Video"
-            onClicked:
-            {
-                camera.captureMode=Camera.CaptureVideo
-                camera.start()
-            }
+    Row{
+        Text {
+            id: element
+            width: 160
+            height: 13
+            text: qsTr("Rotation / deg")
+            font.pixelSize: 18
         }
-        Button{
-            id: clockwise
-            width: 100
-            height: 40
-            text: "Clockwise"
-            onClicked:
-            {
-                Stepper.moveStepper(true,10,500);
-            }
-        }
-        Button{
-            id: anticlockwise
-            width: 100
-            height: 40
-            text: "Anticlockwise"
-            onClicked: {
-                Stepper.moveStepper(false,10,500);
-            }
-        }
-        Button{
-            id: fast
-            width: 100
-            height: 40
-            text: "Fast"
-            onClicked:{
-                Stepper.moveStepper(false,200,1);
-            }
+        SpinBox {
+            id: spinBox
+            maximumValue: 360
+            minimumValue: 0
+            value:90
         }
     }
+    Row {
+         ExclusiveGroup { id: direction }
+         RadioButton {
+             id:clockwiseButton
+             text: "Clockwise"
+             checked: true
+             exclusiveGroup: direction
+         }
+         RadioButton {
+             text: "AntiClockwise"
+             exclusiveGroup: direction
+         }
+    }
+
+    Button{
+        id: rotateButton
+        width: 100
+        height: 40
+        text: "Rotate"
+        onClicked:{
+            Stepper.moveStepper(true,rotationDegrees,200);
+        }
+    }
+
+    RoundButton {
+        id: roundButton
+        text: "Rotate"
+    }
+
 }
+
+}
+
 
