@@ -13,13 +13,21 @@ ApplicationWindow {
 
     TabView
     {
-        anchors.centerIn:parent
+        z:1
+        anchors.left: parent.left
+        anchors.verticalCenter: parent.verticalCenter
         width:800
+        VideoCameraWindow{
+            width:400;height:400
+            anchors.right: parent.right
+            anchors.top:parent.top
+            z:2         // Make sure this is shown on top of tab windows
+            visible:! imageBrowser.visible
+        }
         height: 480
         Tab{ title: "Manual Control";ManualControl{}}
-        Tab{ title: "Image Browser";ImageBrowser{}}
-        CycleWindow{}
-        DemoTab{}
+        Tab{ title: "Cycle";CycleWindow{}}
+        Tab{ id:imageBrowser;title: "Image Browser";ImageBrowser{}}
     }
 }
 

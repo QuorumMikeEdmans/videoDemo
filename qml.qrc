@@ -2,7 +2,6 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>PhotoPreview.qml</file>
-        <file>DemoTab.qml</file>
         <file>ManualControl.qml</file>
         <file>ColumnVideoStillImages.qml</file>
         <file>CycleWindow.qml</file>

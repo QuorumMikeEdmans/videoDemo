@@ -6,6 +6,10 @@ import quorum.stepper 1.0
 
 
 Item{
+        function stopCamera()
+        {
+            camera.stop()
+        }
 
         Camera {
            id: camera

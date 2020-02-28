@@ -12,10 +12,27 @@ void Stepper::moveStepper(bool Clockwise, float degrees, int interval_ms)
         digitalWrite(DIRECTION_PIN,1);
     else
         digitalWrite(DIRECTION_PIN,0);
-    digitalWrite(CURRENT_ON_PIN,1);
-
-
+    digitalWrite(CURRENT_ON_PIN,1);         // enable Drive
 }
+
+void Stepper::rotate(void)
+{
+    setDriveEnabled(true);
+    pulseTimer->start(m_interval_ms);
+    steps=m_rotationDegrees*microSteps/degreesPerStep;
+    if (m_clockwise)
+        digitalWrite(DIRECTION_PIN,1);
+    else
+        digitalWrite(DIRECTION_PIN,0);
+    digitalWrite(CURRENT_ON_PIN,1);
+}
+
+void Stepper::stop(void)
+{
+    pulseTimer->stop();
+}
+
+
 
 void Stepper::onStepperTimer()
 {
@@ -35,7 +52,7 @@ void Stepper::onStepperTimer()
     if (! --steps)
     {
         pulseTimer->stop();
-        digitalWrite(CURRENT_ON_PIN,0);
+//        digitalWrite(CURRENT_ON_PIN,0);
     }
 }
 
@@ -58,4 +75,30 @@ Stepper::Stepper(QObject *parent) : QObject(parent)
     pulseTimer=new QTimer;
     connect (pulseTimer,SIGNAL(timeout()),this,SLOT(onStepperTimer()));
 
+}
+
+void Stepper::setDriveEnabled(bool val)
+{
+    if (val)
+        digitalWrite(CURRENT_ON_PIN, 1);
+    else
+        digitalWrite(CURRENT_ON_PIN, 0);
+
+    m_driveEnabled=val;
+    driveEnabledChanged();
+}
+
+void Stepper::setInterval_ms(int val)
+{
+    m_interval_ms=val;
+    setSpeedDialText(m_interval_ms);
+    interval_msChanged();
+}
+
+void Stepper::setSpeedDialText(int interval_ms)
+{
+
+    float speedDegreesPerMin=(float)(degreesPerStep*60*1000)/(float)(microSteps*m_interval_ms);
+    strSpeedDialText=QString::number(speedDegreesPerMin,'g',2);
+    setSpeedDialText(strSpeedDialText);
 }
