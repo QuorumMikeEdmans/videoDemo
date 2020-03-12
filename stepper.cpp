@@ -131,14 +131,14 @@ void Stepper::onStatusTimer()
         digitalWrite(STEP_PIN,1);
     }
 
-    if (! --steps)
+    if ( --steps<=0)
     {
         pulseTimer->stop();
         setRotating(false);
         if (mb_cycleRunning)
         {
             captureStillImage();
-            if (m_cycleCount++==m_numberCycles)
+            if (m_cycleCount++>=m_numberCycles)
             {
                 stopCycle();
             }else

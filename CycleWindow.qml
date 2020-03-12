@@ -49,11 +49,11 @@ Item{
     Column{
         spacing: 10
         topPadding: 40
-        x:350
+        x:320
 
         Row{
             Text {
-                width: 350
+                width: 420
                 height: 15
                 wrapMode: Text.WordWrap
                 text: Stepper.cycleStatusText
