@@ -1,25 +1,18 @@
 #include "stepper.h"
 #include "/usr/include/wiringPi.h"
 #include <QDebug>
+#include <QThread>
 
-
-void Stepper::moveStepper(bool Clockwise, float degrees, int interval_ms)
-{
-    qDebug()<<"Clockwise"<<Clockwise<<"degrees"<<degrees<<"interval_ms"<<interval_ms;
-    pulseTimer->start(interval_ms);
-    steps=degrees;
-    if (Clockwise)
-        digitalWrite(DIRECTION_PIN,1);
-    else
-        digitalWrite(DIRECTION_PIN,0);
-    digitalWrite(CURRENT_ON_PIN,1);         // enable Drive
-}
 
 void Stepper::rotate(void)
 {
     setDriveEnabled(true);
     pulseTimer->start(m_interval_ms);
-    steps=m_rotationDegrees*microSteps/degreesPerStep;
+    blinkTimer->start(500);
+    setBlinkOn(true);
+    setRotating(true);
+    steps=gearRatio*m_rotationDegrees*microSteps/degreesPerStep;
+    qDebug()<<"steps "<<steps<<m_rotationDegrees<<microSteps<<degreesPerStep;
     if (m_clockwise)
         digitalWrite(DIRECTION_PIN,1);
     else
@@ -29,30 +22,131 @@ void Stepper::rotate(void)
 
 void Stepper::stop(void)
 {
+    setRotating(false);
     pulseTimer->stop();
 }
 
-
-
-void Stepper::onStepperTimer()
+void Stepper::step(void)
 {
+    pulseTimer->stop();
+    setRotating(false);
+    setDriveEnabled(true);
+    if (m_clockwise)
+        digitalWrite(DIRECTION_PIN,1);
+    else
+        digitalWrite(DIRECTION_PIN,0);
+   digitalWrite(STEP_PIN,1);
+   QThread::msleep(100);
+   digitalWrite(STEP_PIN,0);
+}
+
+void Stepper::startCycle()
+{
+    setcycleCount(0);
+    setcycleRunning(true);
+    setDriveEnabled(true);
+    pulseTimer->start(m_cycleInterval_ms);
+    blinkTimer->start(500);
+    setBlinkOn(true);
+    setRotating(true);
+    numberSteps=gearRatio*m_cycleRotationDegrees*microSteps/degreesPerStep;
+    steps=numberSteps;
+    qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
+    m_cycleClockwise=true;
+    digitalWrite(DIRECTION_PIN,1);
+    digitalWrite(CURRENT_ON_PIN,1);
+    statusTimer->start(200);
+    captureStillImage();
+}
+void Stepper::continueCycle()
+{
+    m_cycleClockwise=!m_cycleClockwise;
+    pulseTimer->start(m_cycleInterval_ms);
+    blinkTimer->start(500);
+    setBlinkOn(true);
+    setRotating(true);
+    numberSteps=gearRatio*m_cycleRotationDegrees*microSteps/degreesPerStep;
+    steps=numberSteps;
+    qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
+    digitalWrite(DIRECTION_PIN,1);
+    digitalWrite(CURRENT_ON_PIN,1);
+    statusTimer->start(200);
+    captureStillImage();
+}
+
+void Stepper::stopCycle()
+{
+    setcycleRunning(false);
+    stop();
+    blinkTimer->start(500);
+    setBlinkOn(false);
+    setRotating(false);
+    statusTimer->stop();
+    cycleStatusTextChanged();
+}
+
+float Stepper::rotationAngle()
+{
+    float degrees=static_cast<float>((numberSteps-steps)*degreesPerStep)/(static_cast<float>(gearRatio)*static_cast<float>( microSteps));
+    return degrees;
+}
+
+
+void Stepper::onBlinkTimer()
+{
+    if (mbRotating)
+    {
+        if (blinkOn())
+            setBlinkOn(false);
+        else
+            setBlinkOn(true);
+    }
+    else
+        setBlinkOn(false);
+}
+
+void Stepper::onPauseTimer()
+{
+    mbPause=false;
+    continueCycle();
+}
+
+void Stepper::onStatusTimer()
+{
+    cycleStatusTextChanged();
+}
+
+ void Stepper::onStepperTimer()
+ {
     if (GPIO_2)
     {
         GPIO_2=false;
         digitalWrite(STEP_PIN,0);
-        qDebug()<<"GPIO_2 off";
     }
     else
     {
         GPIO_2=true;
         digitalWrite(STEP_PIN,1);
-        qDebug()<<"GPIO_2 on";
     }
 
     if (! --steps)
     {
         pulseTimer->stop();
-//        digitalWrite(CURRENT_ON_PIN,0);
+        setRotating(false);
+        if (mb_cycleRunning)
+        {
+            captureStillImage();
+            if (m_cycleCount++==m_numberCycles)
+            {
+                stopCycle();
+            }else
+            {
+                setcycleCount(m_cycleCount);
+                pauseTimer->setSingleShot(true);
+                pauseTimer->start(m_pauseTimeSeconds*1000);
+                mbPause=true;
+            }
+        }
     }
 }
 
@@ -64,17 +158,54 @@ Stepper::Stepper(QObject *parent) : QObject(parent)
     pinMode(DIRECTION_PIN, OUTPUT);		// Configure GPIO0 as an output
     pinMode(STEP_PIN, OUTPUT);		// Configure GPIO0 as an output
     pinMode(FAULT_PIN, INPUT);
+//    pinMode(ENABLE_LEVEL_CONVERTER_PIN, OUTPUT);
 
     digitalWrite(CURRENT_ON_PIN, 0);
     digitalWrite(DIRECTION_PIN, 0);
     digitalWrite(STEP_PIN, 0);
     digitalWrite(FAULT_PIN, 0);
+//    digitalWrite(ENABLE_LEVEL_CONVERTER_PIN, 1);        // Enable level converter
+
 
 
     qDebug()<<"GPIO configured";
     pulseTimer=new QTimer;
+    blinkTimer=new QTimer;
+    pauseTimer=new QTimer;
+    statusTimer=new QTimer;
     connect (pulseTimer,SIGNAL(timeout()),this,SLOT(onStepperTimer()));
+    connect (blinkTimer,SIGNAL(timeout()),this,SLOT(onBlinkTimer()));
+    connect (statusTimer,SIGNAL(timeout()),this,SLOT(onStatusTimer()));
+   connect (pauseTimer,SIGNAL(timeout()),this,SLOT(onPauseTimer()));
+}
 
+void Stepper::setcycleRunning(bool val)
+{
+    mb_cycleRunning=val;
+    cycleRunningChanged();
+}
+
+QString Stepper::cycleStatusText()
+{
+    QString statusText;
+    if (cycleRunning()){
+        if (mbPause){
+            statusText="Paused ";
+            int timeRemaining, totalTime, elapsedTime;
+            timeRemaining=pauseTimer->remainingTime()/1000;
+            totalTime=pauseTimer->interval()/1000;
+            elapsedTime=totalTime-timeRemaining;
+            statusText+=QString::number(elapsedTime)+"s / "+QString::number(totalTime)+"s";
+            statusText+=". Cycle "+QString::number(m_cycleCount)+" / "+QString::number(m_numberCycles);
+
+        }else{
+            statusText="Running ";
+            statusText+=QString::number(static_cast<int>(rotationAngle()))+" deg / "+QString::number(m_cycleRotationDegrees)+" deg";
+            statusText+=". Cycle "+QString::number(m_cycleCount)+" / "+QString::number(m_numberCycles);
+        }
+    }
+    else statusText="Idle";
+    return statusText;
 }
 
 void Stepper::setDriveEnabled(bool val)
@@ -88,17 +219,48 @@ void Stepper::setDriveEnabled(bool val)
     driveEnabledChanged();
 }
 
-void Stepper::setInterval_ms(int val)
+void Stepper::setinterval_10ms(int val)
 {
-    m_interval_ms=val;
+    m_interval_ms=val*10;
     setSpeedDialText(m_interval_ms);
-    interval_msChanged();
+    interval_10msChanged();
+    if(mbRotating)
+    {
+        pulseTimer->stop();
+        pulseTimer->start(m_interval_ms);
+    }
+    qDebug()<<"Stepper interval"<<m_interval_ms<<" ms";
+}
+void Stepper::setcycleInterval_10ms(int val)
+{
+    m_cycleInterval_ms=val*10;
+    setcycleSpeedDialText(m_cycleInterval_ms);
+    cycleInterval_10msChanged();
+    if(mbRotating)
+    {
+        pulseTimer->stop();
+        pulseTimer->start(m_cycleInterval_ms);
+    }
+    qDebug()<<"Cycle step interval"<<m_cycleInterval_ms<<" ms";
 }
 
 void Stepper::setSpeedDialText(int interval_ms)
 {
 
-    float speedDegreesPerMin=(float)(degreesPerStep*60*1000)/(float)(microSteps*m_interval_ms);
-    strSpeedDialText=QString::number(speedDegreesPerMin,'g',2);
+    float speedDegreesPerSec=static_cast<float>(degreesPerStep*1000)/(static_cast<float>(microSteps*interval_ms)*gearRatio);
+//    float speedDegreesPerSec=(float)(degreesPerStep*1000)/((float)(microSteps*interval_ms)*gearRatio);
+    strSpeedDialText=QString::number(static_cast<double>(speedDegreesPerSec),'g',2);
+    strSpeedDialText+=QString(" deg per sec");
     setSpeedDialText(strSpeedDialText);
+}
+
+void Stepper::setcycleSpeedDialText(int interval_ms)
+{
+    float speedDegreesPerSec=static_cast<float>(degreesPerStep*1000)/(static_cast<float>(microSteps*interval_ms)*gearRatio);
+//    float speedDegreesPerSec=(float)(degreesPerStep*1000)/((float)(microSteps*interval_ms)*gearRatio);
+    mstr_cycleSpeedDialText=QString::number(static_cast<double>(speedDegreesPerSec),'g',2);
+    mstr_cycleSpeedDialText+=QString(" deg per sec");
+    qDebug()<<mstr_cycleSpeedDialText;
+    setcycleSpeedDialText(mstr_cycleSpeedDialText);
+
 }

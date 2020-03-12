@@ -6,10 +6,51 @@ import quorum.stepper 1.0
 
 
 Item{
-        function stopCamera()
+
+    Timer{
+        id: startTimer
+        running:false
+        repeat: false
+        onTriggered:
+            if (parent.visible)
+                camera.start()
+    }
+    function stopCamera()
+    {
+        camera.stop()
+        console.log("Stop Camera")
+    }
+    function startCamera()
+    {
+        camera.start()
+        console.log("Start Camera")
+    }
+
+    onVisibleChanged: {
+        if (visible)
         {
-            camera.stop()
+            startTimer.start(500)
+            console.log("timer started")
         }
+        else
+            camera.stop()
+    }
+
+    Timer{
+        id:statusTimer
+        running:true
+        interval: 2000
+        repeat: true
+        onTriggered: {
+            if (parent.visible)
+            {
+                console.log(camera.cameraState)
+                console.log(camera.cameraStatus)
+                if (camera.cameraState==0)
+                    camera.start()
+            }
+        }
+    }
 
         Camera {
            id: camera

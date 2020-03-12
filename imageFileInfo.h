@@ -64,6 +64,7 @@ public:
 
 public slots:
     void initialise();
+    void deleteAllFiles();
 
 
 };

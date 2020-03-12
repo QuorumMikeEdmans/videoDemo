@@ -22,10 +22,22 @@ ApplicationWindow {
             anchors.right: parent.right
             anchors.top:parent.top
             z:2         // Make sure this is shown on top of tab windows
-            visible:! imageBrowser.visible
+            visible: manualControl.visible
+//            onVisibleChanged: {
+//                if (!visible)
+//                {
+//                    console.log("Stop Camera")
+//                    stopCamera()
+//                }else
+//                {
+//                    console.log("Start Camera")
+//                    startCamera()
+//                }
+
+//            }
         }
         height: 480
-        Tab{ title: "Manual Control";ManualControl{}}
+        Tab{ id:manualControl;title: "Manual Control";ManualControl{}}
         Tab{ title: "Cycle";CycleWindow{}}
         Tab{ id:imageBrowser;title: "Image Browser";ImageBrowser{}}
     }

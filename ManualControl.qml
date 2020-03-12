@@ -1,6 +1,7 @@
 import QtQuick 2.11
 import QtQuick.Controls 2.4
 import QtQuick.Controls 1.4
+import QtQuick.Controls.Styles 1.4
 import QtMultimedia 5.0
 import quorum.stepper 1.0
 
@@ -12,8 +13,8 @@ Item{
     height: parent.height
 
     Column{
-        spacing: 10
-        topPadding: 40
+        spacing: 9
+        topPadding: 20
         x:0
 
 
@@ -62,15 +63,33 @@ Item{
                  exclusiveGroup: direction
              }
         }
-
-        Button{
-            id: rotateButton
-            width: 100
-            height: 40
-            text: "Rotate"
-            onClicked:{
-    //            Stepper.moveStepper(true,rotationDegrees,200);
-                Stepper.rotate();
+        Row{
+            spacing:30
+            Button{
+                id: rotateButton
+                anchors.verticalCenter: parent.verticalCenter
+                width: 100
+                height: 40
+                text: "Rotate"
+                onClicked:{
+                    Stepper.rotate();
+                }
+            }
+            CheckBox{
+                id:flasher
+                visible: Stepper.rotating
+                checked: Stepper.blinkOn
+                anchors.verticalCenter: parent.verticalCenter
+                style: CheckBoxStyle {
+                     indicator: Rectangle {
+                             implicitWidth: 16
+                             implicitHeight: 16
+                             radius: 8
+                             color: control. checked ? "red":"#c0c0c0"
+                             border.color: control.activeFocus ? "darkblue" : "gray"
+                             border.width: 1
+                     }
+                }
             }
         }
         Button{
@@ -79,21 +98,29 @@ Item{
             height: 40
             text: "Stop"
             onClicked:{
-    //            Stepper.moveStepper(true,rotationDegrees,200);
                 Stepper.stop();
             }
         }
+        Button{
+            id: stepButton
+            width: 100
+            height: 40
+            text: "Step"
+            onClicked:{
+                Stepper.step();
+            }
+        }
+
 
         Dial {
             id: dial
             width: 98
             height: 104
-            from:100
+            from:20
             to:1
-            onValueChanged: Stepper.interval_ms=value
+            onValueChanged: Stepper.interval_10ms=value
         }
         Text{
-//                text:Stepper.speedDialText
             text:"Speed"
             anchors.horizontalCenter: dial.horizontalCenter
         }

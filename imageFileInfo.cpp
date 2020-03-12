@@ -2,8 +2,9 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QString>
+#include <QStringList>
 #include <QDateTime>
-
+#include <QDebug>
 
 imageFileInfo::imageFileInfo(QObject *parent) : QObject(parent)
 {
@@ -33,6 +34,23 @@ void ImageFileList::initialise()
     }
     if (qmlEngine!=nullptr)
         qmlEngine->rootContext()->setContextProperty("imageFileList", QVariant::fromValue(fileList));
+}
+void ImageFileList::deleteAllFiles()
+{
+
+    QDir dir("/home/pi/capturedImages");
+    if (dir.exists())
+    {
+        QDir::setCurrent("/home/pi/capturedImages");        QStringList stringList=dir.entryList();
+
+        foreach (QString fileName, stringList)
+        {
+            QString filePath=QString("file:/")+fileName;
+            QFile::remove(fileName);
+            qDebug()<<filePath<<" deleted";
+        }
+    }
+    initialise();
 }
 
 
