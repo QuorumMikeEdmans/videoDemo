@@ -33,7 +33,10 @@ Item{
             console.log("timer started")
         }
         else
+        {
+            console.log ("Stop camera")
             camera.stop()
+        }
     }
 
     Timer{

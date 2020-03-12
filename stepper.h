@@ -21,7 +21,7 @@ class Stepper : public QObject
     Q_PROPERTY(int pauseTimeSeconds READ pauseTimeSeconds WRITE  setpauseTimeSeconds NOTIFY pauseTimeSecondsChanged)
     Q_PROPERTY(int numberCycles READ numberCycles WRITE  setnumberCycles NOTIFY pauseTimeSecondsChanged)
     Q_PROPERTY(int cycleRotationDegrees READ cycleRotationDegrees WRITE  setcycleRotationDegrees NOTIFY cycleRotationDegreesChanged)
-    Q_PROPERTY(int cycleInterval_10ms READ cycleInterval_10ms WRITE  setcycleInterval_10ms NOTIFY cycleInterval_10msChanged)
+    Q_PROPERTY(int cycleInterval_ms READ cycleInterval_ms WRITE  setcycleInterval_ms NOTIFY cycleInterval_msChanged)
     Q_PROPERTY(int cycleCount READ cycleCount WRITE  setcycleCount NOTIFY cycleCountChanged)
     Q_PROPERTY(QString cycleStatusText READ cycleStatusText NOTIFY cycleStatusTextChanged)
 
@@ -50,7 +50,7 @@ public:
     int pauseTimeSeconds(void) {return m_pauseTimeSeconds;}
     int numberCycles(void) {return m_numberCycles;}
     int cycleRotationDegrees(void) {return m_cycleRotationDegrees;}
-    int cycleInterval_10ms(void) {return m_cycleInterval_ms/10;}
+    int cycleInterval_ms(void) {return m_cycleInterval_ms;}
     bool infiniteCycle(void){return mb_infiniteCycle;}
     bool cycleRunning(void){return mb_cycleRunning;}
     void setcycleRunning(bool val);
@@ -63,7 +63,7 @@ public:
     void setpauseTimeSeconds(int val){m_pauseTimeSeconds=val;pauseTimeSecondsChanged();}
     void setnumberCycles(int val){m_numberCycles=val;numberCyclesChanged();}
     void setcycleRotationDegrees(int val){m_cycleRotationDegrees=val;cycleRotationDegreesChanged();}
-    void setcycleInterval_10ms(int val);
+    void setcycleInterval_ms(int val);
     bool driveEnabled(void) {return m_driveEnabled;}
     void setDriveEnabled(bool val);
     void setRotationDegrees(int val){m_rotationDegrees=val;rotationDegreesChanged();}
@@ -88,7 +88,7 @@ signals:
     void pauseTimeSecondsChanged();
     void numberCyclesChanged();
     void cycleRotationDegreesChanged();
-    void cycleInterval_10msChanged();
+    void cycleInterval_msChanged();
     void cycleSpeedDialTextChanged();
     void infiniteCycleChanged();
     void captureStillImage();
@@ -117,8 +117,8 @@ private:
     int degreesPerStep=180;
     int microSteps=3200;
     int m_interval_ms=10;
-//    float gearRatio=2;
-    float gearRatio=39.0/8.0;
+    float gearRatio=2;
+//    float gearRatio=39.0/8.0;
     QString strSpeedDialText;
 
     int m_pauseTimeSeconds=20;

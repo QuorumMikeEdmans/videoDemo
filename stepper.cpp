@@ -68,8 +68,10 @@ void Stepper::continueCycle()
     numberSteps=gearRatio*m_cycleRotationDegrees*microSteps/degreesPerStep;
     steps=numberSteps;
     qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
-    digitalWrite(DIRECTION_PIN,1);
-    digitalWrite(CURRENT_ON_PIN,1);
+    if (m_cycleClockwise)
+        digitalWrite(DIRECTION_PIN,1);
+    else
+        digitalWrite(DIRECTION_PIN,0);
     statusTimer->start(200);
     captureStillImage();
 }
@@ -199,7 +201,10 @@ QString Stepper::cycleStatusText()
             statusText+=". Cycle "+QString::number(m_cycleCount)+" / "+QString::number(m_numberCycles);
 
         }else{
-            statusText="Running ";
+            if (m_cycleClockwise)
+                statusText="Rotating clockwise ";
+            else
+                statusText="Rotating anticlockwise ";
             statusText+=QString::number(static_cast<int>(rotationAngle()))+" deg / "+QString::number(m_cycleRotationDegrees)+" deg";
             statusText+=". Cycle "+QString::number(m_cycleCount)+" / "+QString::number(m_numberCycles);
         }
@@ -231,11 +236,11 @@ void Stepper::setinterval_10ms(int val)
     }
     qDebug()<<"Stepper interval"<<m_interval_ms<<" ms";
 }
-void Stepper::setcycleInterval_10ms(int val)
+void Stepper::setcycleInterval_ms(int val)
 {
-    m_cycleInterval_ms=val*10;
+    m_cycleInterval_ms=val;
     setcycleSpeedDialText(m_cycleInterval_ms);
-    cycleInterval_10msChanged();
+    cycleInterval_msChanged();
     if(mbRotating)
     {
         pulseTimer->stop();

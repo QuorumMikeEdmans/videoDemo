@@ -1,10 +1,20 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Controls 1.4
+//import QtQuick 2.11
+//import QtQuick.Controls 2.4
+//import QtQuick.Controls 1.4
+
+import QtQuick 2.9
+import QtQuick.Controls 2.2
+import QtQuick.Controls.Styles 1.4
+import QtQuick.Layouts 1.3
+import QtQuick.Window 2.2
+//import QtQuick.VirtualKeyboard 2.2
 import QtMultimedia 5.0
 import quorum.stepper 1.0
 
+
 Item{
+    property int spinBoxHeight: 40
+    property int spinBoxTextHeight:24
     anchors.fill:parent
     Component.onCompleted: videoWindow.captureImage()
 
@@ -39,25 +49,36 @@ Item{
     Column{
         spacing: 10
         topPadding: 40
-        x:481
+        x:350
+
+        Row{
             Text {
-                width: 220
-                height: 40
+                width: 350
+                height: 15
                 wrapMode: Text.WordWrap
                 text: Stepper.cycleStatusText
-                font.pixelSize: 14
+                font.pixelSize: 16
             }
+            Flasher{
+                visible: Stepper.rotating
+                flash: Stepper.blinkOn
+            }
+        }
 
         Row{
             Text {
                 width: 160
-                height: 13
+                height: spinBoxHeight
                 text: qsTr("Rotation / deg")
                 font.pixelSize: 18
             }
             SpinBox {
-                maximumValue: 360
-                minimumValue: 0
+                font.pixelSize: spinBoxTextHeight
+                height: spinBoxHeight
+                from:0
+                to:360
+//                maximumValue: 360
+//                minimumValue: 0
                 value:180
                 stepSize: 5
                 onValueChanged: Stepper.cycleRotationDegrees=value
@@ -71,8 +92,11 @@ Item{
                 font.pixelSize: 18
             }
             SpinBox {
-                maximumValue: 120
-                minimumValue: 0
+
+                height: spinBoxHeight
+                font.pixelSize: spinBoxTextHeight
+                from: 0
+                to:180
                 value:20
                 stepSize: 5
                 onValueChanged: Stepper.pauseTimeSeconds=value
@@ -92,22 +116,50 @@ Item{
                 font.pixelSize: 18
             }
             SpinBox {
+                height: spinBoxHeight
+                font.pixelSize: spinBoxTextHeight
                 enabled:!Stepper.infiniteCycle
-                maximumValue: 10000
-                minimumValue: 1
+                from: 1
+                to: 10000
+                //                maximumValue: 10000
+                //                minimumValue: 1
                 value:1000
                 stepSize: 10
                 onValueChanged: Stepper.numberCycles=value
             }
         }
+Row{
+    spacing:20
         Dial {
             id: dial
-            width: 98
-            height: 104
-            from:20
-            to:1
-            onValueChanged: Stepper.cycleInterval_10ms=value
+            width: 65
+            height: 65
+            from:30
+            to:6
+            onValueChanged: Stepper.cycleInterval_ms=value
         }
+        MyButton{
+            anchors.verticalCenter: parent.verticalCenter
+            width: 100
+            height: 40
+            text: "Start"
+            onClicked:
+            {
+                Stepper.startCycle()
+            }
+        }
+        MyButton{
+            anchors.verticalCenter: parent.verticalCenter
+            width: 100
+            height: 40
+            text: "Stop"
+
+            onClicked:
+            {
+                Stepper.stopCycle()
+            }
+        }
+}
         Row{
             spacing:5
             anchors.horizontalCenter: dial.horizontalCenter
@@ -118,25 +170,26 @@ Item{
                 text:Stepper.cycleSpeedDialText
             }
         }
-        Button{
-            width: 100
-            height: 40
-            text: "Start"
-            onClicked:
-            {
-                Stepper.startCycle()
-            }
-        }
-        Button{
-            width: 100
-            height: 40
-            text: "Stop"
-            onClicked:
-            {
-                Stepper.stopCycle()
-            }
-        }
-
+//        Row{
+//            Button{
+//                width: 60
+//                height: 25
+//                text: "Start"
+//                onClicked:
+//                {
+//                    Stepper.startCycle()
+//                }
+//            }
+//            Button{
+//                width: 60
+//                height: 25
+//                text: "Stop"
+//                onClicked:
+//                {
+//                    Stepper.stopCycle()
+//                }
+//            }
+//        }
     }
 
 }
