@@ -7,7 +7,7 @@ import quorum.stepper 1.0
 
 Column{
         width:300
-        spacing:20
+        spacing:10
         signal captureImage
 
         property int  imageWidth: 240
