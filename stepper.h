@@ -128,6 +128,7 @@ private:
     QString mstr_cycleSpeedDialText;
     bool mb_infiniteCycle;
     int numberSteps;
+    double rotateAngle=0;
 
 
     QTimer *pulseTimer;

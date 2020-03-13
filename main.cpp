@@ -16,17 +16,26 @@ QObject *stepper_singleton_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
         m_Stepper=new Stepper();
     return m_Stepper;
 }
+ImageFileList *m_FileList=nullptr;
 
 QObject *imageFileList_singleton_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 {
     Q_UNUSED(scriptEngine);
-    static ImageFileList *m_FileList=nullptr;
+//    static ImageFileList *m_FileList=nullptr;
 
     if (m_FileList==nullptr)
         m_FileList=new ImageFileList();
     m_FileList->setEngine(engine);
     return m_FileList;
 }
+QObject *getImageFileList()
+{
+    if (m_FileList==nullptr)
+        m_FileList=new ImageFileList();
+    return m_FileList;
+}
+
+
 
 
 int main(int argc, char *argv[])

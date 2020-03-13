@@ -27,15 +27,17 @@ public:
     QString myDate;
     QString myTime;
     QString mImageUrl;
+    int mRotation;
     void setDate(QString val){myDate=val;dateChanged();}
     void setTime(QString val){myTime=val;timeChanged();}
     void setImageUrl(QString val){mImageUrl=val;imageUrlChanged();}
 
-    imageFileInfo(QString date, QString time, QString url)
+    imageFileInfo(QString date, QString time, QString url, int rotation)
     {
         myDate=date;
         myTime=time;
         mImageUrl=url;
+        mRotation=rotation;
     }
 
 
@@ -63,9 +65,9 @@ public:
     void setEngine(QQmlEngine *engine){qmlEngine=engine;}
 
 public slots:
-    void initialise();
+//    void initialise();
     void deleteAllFiles();
-
+    void addNewImage(QString url, int rotation);
 
 };
 
