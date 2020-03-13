@@ -34,8 +34,8 @@ Column{
             {
                 if (camera.cameraState==Camera.ActiveState)
                 {
-                    camera.imageCapture.captureToLocation("/home/pi/capturedImages")
                     camera.captureMode=Camera.CaptureStillImage
+                    camera.imageCapture.captureToLocation("/home/pi/capturedImages")
                     console.log("Capture Still image")
                 }else
                     console.log("Camera not active")
