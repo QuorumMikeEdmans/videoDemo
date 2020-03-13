@@ -125,7 +125,15 @@ Item{
                 //                minimumValue: 1
                 value:1000
                 stepSize: 10
-                onValueChanged: Stepper.numberCycles=value
+                onValueChanged: {
+                    Stepper.numberCycles=value
+                    if (value<10)
+                        stepSize=1;
+                    else
+                        if (value<100)
+                            stepSize=10
+                    else stepSize=100
+                }
             }
         }
 Row{

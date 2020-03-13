@@ -19,7 +19,7 @@ Item {
     }
     Timer {
         id: startTimer
-        running:true
+        running:false
         repeat: true
         interval:3000
         onTriggered: if (parent.visible)

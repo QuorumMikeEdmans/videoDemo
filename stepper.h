@@ -117,8 +117,8 @@ private:
     int degreesPerStep=180;
     int microSteps=3200;
     int m_interval_ms=10;
-    float gearRatio=2;
-//    float gearRatio=39.0/8.0;
+//    float gearRatio=2; // Debug only
+    float gearRatio=39.0/8.0;
     QString strSpeedDialText;
 
     int m_pauseTimeSeconds=20;
@@ -144,6 +144,7 @@ private:
     bool mbPause=false;
     float rotationAngle(void);
     void continueCycle();
+    int cycleStep=0;
 
 #define CURRENT_ON_PIN  8
 #define DIRECTION_PIN  9

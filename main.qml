@@ -10,7 +10,7 @@ ApplicationWindow {
     visible: true
     width: 800
     height: 480
-    title: qsTr("Mike's Video")
+    title: qsTr("Capn Ken's Stepper Controller")
 
     TabView
     {

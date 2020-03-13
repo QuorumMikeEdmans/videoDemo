@@ -43,6 +43,7 @@ void Stepper::step(void)
 void Stepper::startCycle()
 {
     setcycleCount(0);
+    cycleStep=0;
     setcycleRunning(true);
     setDriveEnabled(true);
     pulseTimer->start(m_cycleInterval_ms);
@@ -60,7 +61,6 @@ void Stepper::startCycle()
 }
 void Stepper::continueCycle()
 {
-    m_cycleClockwise=!m_cycleClockwise;
     pulseTimer->start(m_cycleInterval_ms);
     blinkTimer->start(500);
     setBlinkOn(true);
@@ -68,10 +68,16 @@ void Stepper::continueCycle()
     numberSteps=gearRatio*m_cycleRotationDegrees*microSteps/degreesPerStep;
     steps=numberSteps;
     qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
-    if (m_cycleClockwise)
-        digitalWrite(DIRECTION_PIN,1);
+    if (cycleStep==2)
+    {
+        digitalWrite(DIRECTION_PIN,0);  // Last step anticlockwise
+        m_cycleClockwise=false;
+    }
     else
-        digitalWrite(DIRECTION_PIN,0);
+    {
+        digitalWrite(DIRECTION_PIN,1); // First steps anticlockwise
+        m_cycleClockwise=true;
+    }
     statusTimer->start(200);
     captureStillImage();
 }
@@ -138,16 +144,19 @@ void Stepper::onStatusTimer()
         if (mb_cycleRunning)
         {
             captureStillImage();
-            if (m_cycleCount++>=m_numberCycles)
+            if (++cycleStep==3)
             {
-                stopCycle();
-            }else
-            {
-                setcycleCount(m_cycleCount);
-                pauseTimer->setSingleShot(true);
-                pauseTimer->start(m_pauseTimeSeconds*1000);
-                mbPause=true;
+                if (m_cycleCount++>=m_numberCycles && !mb_infiniteCycle)
+                {
+                    stopCycle();
+                    return;
+                }
+                cycleStep=0;
             }
+            setcycleCount(m_cycleCount);
+            pauseTimer->setSingleShot(true);
+            pauseTimer->start(m_pauseTimeSeconds*1000);
+            mbPause=true;
         }
     }
 }
@@ -206,7 +215,10 @@ QString Stepper::cycleStatusText()
             else
                 statusText="Rotating anticlockwise ";
             statusText+=QString::number(static_cast<int>(rotationAngle()))+" deg / "+QString::number(m_cycleRotationDegrees)+" deg";
-            statusText+=". Cycle "+QString::number(m_cycleCount)+" / "+QString::number(m_numberCycles);
+            if (mb_infiniteCycle)
+                statusText+=". Cycle "+QString::number(m_cycleCount);
+            else
+                statusText+=". Cycle "+QString::number(m_cycleCount)+" / "+QString::number(m_numberCycles);
         }
     }
     else statusText="Idle";

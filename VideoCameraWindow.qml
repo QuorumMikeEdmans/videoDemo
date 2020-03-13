@@ -15,21 +15,11 @@ Item{
             if (parent.visible)
                 camera.start()
     }
-    function stopCamera()
-    {
-        camera.stop()
-        console.log("Stop Camera")
-    }
-    function startCamera()
-    {
-        camera.start()
-        console.log("Start Camera")
-    }
 
     onVisibleChanged: {
         if (visible)
         {
-            startTimer.start(500)
+            startTimer.start(200)
             console.log("timer started")
         }
         else
