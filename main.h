@@ -2,3 +2,6 @@
 #define MAIN_H
 
 #endif // MAIN_H
+#include <QObject>
+
+QObject *getImageFileList();

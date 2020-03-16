@@ -12,15 +12,15 @@ class imageFileInfo : public QObject
 public:
     explicit imageFileInfo(QObject *parent = nullptr);
 
-
-
     Q_PROPERTY(QString date READ date WRITE setDate NOTIFY dateChanged)
     Q_PROPERTY(QString time READ time WRITE setTime NOTIFY timeChanged)
     Q_PROPERTY(QString imageUrl READ imageUrl WRITE setImageUrl NOTIFY imageUrlChanged)
+    Q_PROPERTY(QString position READ position NOTIFY positionChanged)
 public:
     QString date(void){return myDate;}
     QString time(void){return myTime;}
     QString imageUrl(void){return mImageUrl;}
+    QString position(void){return QString("Posn: ")+QString::number(mRotation);}
 
 
 //    imageUrl: "file://home/pi/capturedImages/IMG.jpg"
@@ -36,7 +36,7 @@ public:
     {
         myDate=date;
         myTime=time;
-        mImageUrl=url;
+        mImageUrl="file:/"+url;
         mRotation=rotation;
     }
 
@@ -45,6 +45,7 @@ signals:
     void dateChanged();
     void timeChanged();
     void imageUrlChanged();
+    void positionChanged();
 
 public slots:
 };

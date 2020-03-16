@@ -1,7 +1,15 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Controls 1.4
+import QtQuick 2.9
+import QtQuick.Controls 2.2
 import QtQuick.Controls.Styles 1.4
+import QtQuick.Layouts 1.3
+import QtQuick.Window 2.2
+
+
+
+//import QtQuick 2.11
+//import QtQuick.Controls 2.4
+//import QtQuick.Controls 1.4
+//import QtQuick.Controls.Styles 1.4
 import QtMultimedia 5.0
 import quorum.stepper 1.0
 
@@ -43,29 +51,35 @@ Item{
             }
             SpinBox {
                 id: spinBox
-                maximumValue: 360
-                minimumValue: 0
+                to: 360
+                from: 0
                 value:90
                 onValueChanged: Stepper.rotationDegrees=value
             }
         }
         Row {
-             ExclusiveGroup { id: direction }
+//             ExclusiveGroup { id: direction }
              RadioButton {
                  id:clockwiseButton
                  text: "Clockwise"
                  checked: true
-                 exclusiveGroup: direction
-                 onCheckedChanged: Stepper.clockwise=checked
+
+                 onClicked: {anticlockwiseButton.checked=!checked}
+//                 exclusiveGroup: direction
+                 onCheckedChanged: {
+                     Stepper.clockwise=checked
+                 }
              }
              RadioButton {
+                 id: anticlockwiseButton
                  text: "AntiClockwise"
-                 exclusiveGroup: direction
+                 checked:false
+//                 exclusiveGroup: direction
              }
         }
         Row{
             spacing:30
-            Button{
+            MyButton{
                 id: rotateButton
                 anchors.verticalCenter: parent.verticalCenter
                 width: 100
@@ -75,24 +89,12 @@ Item{
                     Stepper.rotate();
                 }
             }
-            CheckBox{
-                id:flasher
+            Flasher{
                 visible: Stepper.rotating
-                checked: Stepper.blinkOn
-                anchors.verticalCenter: parent.verticalCenter
-                style: CheckBoxStyle {
-                     indicator: Rectangle {
-                             implicitWidth: 16
-                             implicitHeight: 16
-                             radius: 8
-                             color: control. checked ? "red":"#c0c0c0"
-                             border.color: control.activeFocus ? "darkblue" : "gray"
-                             border.width: 1
-                     }
-                }
+                flash: Stepper.blinkOn
             }
         }
-        Button{
+        MyButton{
             id: stopButton
             width: 100
             height: 40
@@ -101,7 +103,7 @@ Item{
                 Stepper.stop();
             }
         }
-        Button{
+        MyButton{
             id: stepButton
             width: 100
             height: 40

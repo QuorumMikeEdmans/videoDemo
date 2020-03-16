@@ -3,6 +3,7 @@ import QtQuick.Controls 2.4
 import QtQuick.Controls 1.4
 import QtMultimedia 5.0
 import quorum.stepper 1.0
+import quorum.imageFileList 1.0
 
 
 Column{
@@ -68,6 +69,7 @@ Column{
            imageCapture {
                onImageCaptured: {
                    stillWindow.source = preview
+                   ImageFileList.addNewImage(camera.imageCapture.capturedImagePath, Stepper.rotationPosition)
                }
             }
         }

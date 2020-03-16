@@ -55,10 +55,16 @@ void ImageFileList::deleteAllFiles()
 
 void ImageFileList::addNewImage(QString url, int rotation)
 {
-    QDateTime dateTime=QDateTime::currentDateTime();
-    QString date=dateTime.toString("ddd MMM d yyyy");
-    QString time=dateTime.toString("hh:mm:ss");
-    fileList.append(new imageFileInfo(date,time,url,rotation));
+    if (url!="")
+    {
+        QDateTime dateTime=QDateTime::currentDateTime();
+        QString date=dateTime.toString("ddd MMM d yyyy");
+        QString time=dateTime.toString("hh:mm:ss");
+        fileList.append(new imageFileInfo(date,time,url,rotation));
+        qDebug()<<date<<time<<url<<rotation;
+        if (qmlEngine!=nullptr)
+            qmlEngine->rootContext()->setContextProperty("imageFileList", QVariant::fromValue(fileList));
+    }
 }
 
 

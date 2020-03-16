@@ -11,6 +11,7 @@ Item {
     anchors.fill: parent
     property string selectedDate:listView.model[listView.currentIndex].date
     property string selectedTime:listView.model[listView.currentIndex].time
+    property string selectedPosition:listView.model[listView.currentIndex].position
     property bool displayWarningButton:false
 
     onVisibleChanged: {
@@ -50,6 +51,11 @@ Item {
             height:20
             text: selectedTime
         }
+        Text{
+            width: 80
+            height:20
+            text: selectedPosition
+        }
     }
     ListView {
         id: listView
@@ -85,6 +91,11 @@ Item {
                 }
                 Text {
                     text: time
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.bold: true
+                }
+                Text {
+                    text: position
                     anchors.verticalCenter: parent.verticalCenter
                     font.bold: true
                 }

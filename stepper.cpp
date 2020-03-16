@@ -57,6 +57,7 @@ void Stepper::startCycle()
     digitalWrite(DIRECTION_PIN,1);
     digitalWrite(CURRENT_ON_PIN,1);
     statusTimer->start(200);
+    setrotationPosition(0);
     captureStillImage();
 }
 void Stepper::continueCycle()
@@ -79,7 +80,7 @@ void Stepper::continueCycle()
         m_cycleClockwise=true;
     }
     statusTimer->start(200);
-    captureStillImage();
+//    captureStillImage();
 }
 
 void Stepper::stopCycle()
@@ -144,6 +145,8 @@ void Stepper::onStatusTimer()
         if (mb_cycleRunning)
         {
             captureStillImage();
+            mRotationPosition+=cycleRotationDegrees();
+            setrotationPosition(mRotationPosition);
             if (++cycleStep==3)
             {
                 if (m_cycleCount++>=m_numberCycles && !mb_infiniteCycle)
@@ -170,15 +173,11 @@ Stepper::Stepper(QObject *parent) : QObject(parent)
     pinMode(STEP_PIN, OUTPUT);		// Configure GPIO0 as an output
     pinMode(FAULT_PIN, INPUT);
 //    pinMode(ENABLE_LEVEL_CONVERTER_PIN, OUTPUT);
-
     digitalWrite(CURRENT_ON_PIN, 0);
     digitalWrite(DIRECTION_PIN, 0);
     digitalWrite(STEP_PIN, 0);
     digitalWrite(FAULT_PIN, 0);
 //    digitalWrite(ENABLE_LEVEL_CONVERTER_PIN, 1);        // Enable level converter
-
-
-
     qDebug()<<"GPIO configured";
     pulseTimer=new QTimer;
     blinkTimer=new QTimer;
