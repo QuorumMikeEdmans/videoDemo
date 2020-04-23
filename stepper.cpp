@@ -11,7 +11,7 @@ void Stepper::rotate(void)
     blinkTimer->start(500);
     setBlinkOn(true);
     setRotating(true);
-    steps=gearRatio*m_rotationDegrees*microSteps/degreesPerStep;
+    steps=gearRatio*(float)m_rotationDegrees*(float)microSteps/(float)degreesPerStep;
     qDebug()<<"steps "<<steps<<m_rotationDegrees<<microSteps<<degreesPerStep;
     if (m_clockwise)
         digitalWrite(DIRECTION_PIN,1);

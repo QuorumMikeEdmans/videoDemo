@@ -128,8 +128,8 @@ private:
     int microSteps=3200;
     int m_interval_ms=10;
 //    float gearRatio=2; // Debug only
-//    float gearRatio=39.0/8.0;
-    float gearRatio=8.0f/39.0f;
+    float gearRatio=39.0f/8.0f;
+//    float gearRatio=1.0f;
     QString strSpeedDialText;
 
     int m_pauseTimeSeconds=20;

@@ -51,7 +51,7 @@ Item{
             }
             SpinBox {
                 id: spinBox
-                to: 360
+                to: 720
                 from: 0
                 value:90
                 onValueChanged: Stepper.rotationDegrees=value
