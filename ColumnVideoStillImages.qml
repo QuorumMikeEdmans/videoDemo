@@ -43,15 +43,6 @@ Column{
             }
         }
 
-//        onCaptureImage:
-//        {
-//            if (camera.cameraState==Camera.ActiveState)
-//            {
-//                camera.imageCapture.captureToLocation("/home/pi/capturedImages")
-//                camera.captureMode=Camera.CaptureStillImage
-//            }else
-//                console.log("Camera not active")
-//        }
         function stopCamera()
         {
             camera.stop()
