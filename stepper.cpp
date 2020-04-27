@@ -42,7 +42,7 @@ void Stepper::step(void)
 
 void Stepper::startCycle()
 {
-    setcycleCount(0);
+    setcycleCount(1);
     cycleStep=0;
     setcycleRunning(true);
     setDriveEnabled(true);
@@ -69,7 +69,7 @@ void Stepper::continueCycle()
     numberSteps=gearRatio*m_cycleRotationDegrees*microSteps/degreesPerStep;
     steps=numberSteps;
     qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
-    if (cycleStep==2)
+    if (cycleStep>1)
     {
         digitalWrite(DIRECTION_PIN,0);  // Last step anticlockwise
         m_cycleClockwise=false;
@@ -147,7 +147,7 @@ void Stepper::onStatusTimer()
             captureStillImage();
             mRotationPosition+=cycleRotationDegrees();
             setrotationPosition(mRotationPosition);
-            if (++cycleStep==3)
+            if (++cycleStep==4)
             {
                 if (m_cycleCount++>=m_numberCycles && !mb_infiniteCycle)
                 {

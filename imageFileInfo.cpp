@@ -37,8 +37,8 @@ void ImageFileList::addNewImage(QString url, int rotation)
         QDateTime dateTime=QDateTime::currentDateTime();
         QString date=dateTime.toString("ddd MMM d yyyy");
         QString time=dateTime.toString("hh:mm:ss");
-        newName=QString("/home/pi/capturedImages/Image")+" "+date+" "+time;
-        QFile::rename(url,newName);
+//        newName=QString("/home/pi/capturedImages/Image")+" "+date+" "+time;
+//        QFile::rename(url,newName);
         fileList.append(new imageFileInfo(date,time,newName,rotation));
         qDebug()<<date<<time<<url<<rotation;
         if (qmlEngine!=nullptr)
