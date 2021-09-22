@@ -17,7 +17,7 @@ void Stepper::rotate(void)
         digitalWrite(DIRECTION_PIN,1);
     else
         digitalWrite(DIRECTION_PIN,0);
-    digitalWrite(CURRENT_ON_PIN,1);
+    digitalWrite(CURRENT_ON_PIN,ENABLE);
 }
 
 void Stepper::stop(void)
@@ -55,7 +55,7 @@ void Stepper::startCycle()
     qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
     m_cycleClockwise=true;
     digitalWrite(DIRECTION_PIN,1);
-    digitalWrite(CURRENT_ON_PIN,1);
+    digitalWrite(CURRENT_ON_PIN,ENABLE);
     statusTimer->start(200);
     captureStillImage();
 }
@@ -65,6 +65,7 @@ void Stepper::continueCycle()
     blinkTimer->start(500);
     setBlinkOn(true);
     setRotating(true);
+    setDriveEnabled(true);
     numberSteps=gearRatio*m_cycleRotationDegrees*microSteps/degreesPerStep;
     steps=numberSteps;
     qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
@@ -89,6 +90,7 @@ void Stepper::stopCycle()
     blinkTimer->start(500);
     setBlinkOn(false);
     setRotating(false);
+    setDriveEnabled(false);
     statusTimer->stop();
     cycleStatusTextChanged();
 }
@@ -141,6 +143,7 @@ void Stepper::onStatusTimer()
     {
         pulseTimer->stop();
         setRotating(false);
+        setDriveEnabled(false);
         if (mb_cycleRunning)
         {
             captureStillImage();
@@ -171,7 +174,7 @@ Stepper::Stepper(QObject *parent) : QObject(parent)
     pinMode(FAULT_PIN, INPUT);
 //    pinMode(ENABLE_LEVEL_CONVERTER_PIN, OUTPUT);
 
-    digitalWrite(CURRENT_ON_PIN, 0);
+    digitalWrite(CURRENT_ON_PIN, DISABLE);
     digitalWrite(DIRECTION_PIN, 0);
     digitalWrite(STEP_PIN, 0);
     digitalWrite(FAULT_PIN, 0);
@@ -228,9 +231,9 @@ QString Stepper::cycleStatusText()
 void Stepper::setDriveEnabled(bool val)
 {
     if (val)
-        digitalWrite(CURRENT_ON_PIN, 1);
+        digitalWrite(CURRENT_ON_PIN, ENABLE);
     else
-        digitalWrite(CURRENT_ON_PIN, 0);
+        digitalWrite(CURRENT_ON_PIN, DISABLE);
 
     m_driveEnabled=val;
     driveEnabledChanged();

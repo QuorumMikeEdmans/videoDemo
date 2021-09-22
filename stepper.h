@@ -146,11 +146,19 @@ private:
     void continueCycle();
     int cycleStep=0;
 
-#define CURRENT_ON_PIN  8
+//#define CURRENT_ON_PIN  8
+//#define DIRECTION_PIN  9
+//#define STEP_PIN  7
+//#define FAULT_PIN 5
+//#define ENABLE_LEVEL_CONVERTER_PIN 15
+#define CURRENT_ON_PIN  7
 #define DIRECTION_PIN  9
-#define STEP_PIN  7
+#define STEP_PIN  8
 #define FAULT_PIN 5
 #define ENABLE_LEVEL_CONVERTER_PIN 15
+
+#define ENABLE 0
+#define DISABLE 1
 };
 
 #endif // STEPPER_H
