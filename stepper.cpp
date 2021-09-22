@@ -116,6 +116,7 @@ void Stepper::onBlinkTimer()
 
 void Stepper::onPauseTimer()
 {
+    setDriveEnabled(true);
     mbPause=false;
     continueCycle();
 }
@@ -160,6 +161,7 @@ void Stepper::onStatusTimer()
             pauseTimer->setSingleShot(true);
             pauseTimer->start(m_pauseTimeSeconds*1000);
             mbPause=true;
+            setDriveEnabled(false);
         }
     }
 }
