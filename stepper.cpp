@@ -11,7 +11,7 @@ void Stepper::rotate(void)
     blinkTimer->start(500);
     setBlinkOn(true);
     setRotating(true);
-    steps=gearRatio*m_rotationDegrees*microSteps/degreesPerStep;
+    steps=gearRatio*(float)m_rotationDegrees*(float)microSteps/(float)degreesPerStep;
     qDebug()<<"steps "<<steps<<m_rotationDegrees<<microSteps<<degreesPerStep;
     if (m_clockwise)
         digitalWrite(DIRECTION_PIN,1);
@@ -42,7 +42,7 @@ void Stepper::step(void)
 
 void Stepper::startCycle()
 {
-    setcycleCount(0);
+    setcycleCount(1);
     cycleStep=0;
     setcycleRunning(true);
     setDriveEnabled(true);
@@ -57,6 +57,7 @@ void Stepper::startCycle()
     digitalWrite(DIRECTION_PIN,1);
     digitalWrite(CURRENT_ON_PIN,ENABLE);
     statusTimer->start(200);
+    setrotationPosition(0);
     captureStillImage();
 }
 void Stepper::continueCycle()
@@ -69,7 +70,7 @@ void Stepper::continueCycle()
     numberSteps=gearRatio*m_cycleRotationDegrees*microSteps/degreesPerStep;
     steps=numberSteps;
     qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
-    if (cycleStep==2)
+    if (cycleStep>1)
     {
         digitalWrite(DIRECTION_PIN,0);  // Last step anticlockwise
         m_cycleClockwise=false;
@@ -80,7 +81,7 @@ void Stepper::continueCycle()
         m_cycleClockwise=true;
     }
     statusTimer->start(200);
-    captureStillImage();
+//    captureStillImage();
 }
 
 void Stepper::stopCycle()
@@ -117,6 +118,7 @@ void Stepper::onBlinkTimer()
 
 void Stepper::onPauseTimer()
 {
+    setDriveEnabled(true);
     mbPause=false;
     continueCycle();
 }
@@ -147,7 +149,9 @@ void Stepper::onStatusTimer()
         if (mb_cycleRunning)
         {
             captureStillImage();
-            if (++cycleStep==3)
+            mRotationPosition+=cycleRotationDegrees();
+            setrotationPosition(mRotationPosition);
+            if (++cycleStep==4)
             {
                 if (m_cycleCount++>=m_numberCycles && !mb_infiniteCycle)
                 {
@@ -160,6 +164,7 @@ void Stepper::onStatusTimer()
             pauseTimer->setSingleShot(true);
             pauseTimer->start(m_pauseTimeSeconds*1000);
             mbPause=true;
+            setDriveEnabled(false);
         }
     }
 }
@@ -173,15 +178,11 @@ Stepper::Stepper(QObject *parent) : QObject(parent)
     pinMode(STEP_PIN, OUTPUT);		// Configure GPIO0 as an output
     pinMode(FAULT_PIN, INPUT);
 //    pinMode(ENABLE_LEVEL_CONVERTER_PIN, OUTPUT);
-
     digitalWrite(CURRENT_ON_PIN, DISABLE);
     digitalWrite(DIRECTION_PIN, 0);
     digitalWrite(STEP_PIN, 0);
     digitalWrite(FAULT_PIN, 0);
 //    digitalWrite(ENABLE_LEVEL_CONVERTER_PIN, 1);        // Enable level converter
-
-
-
     qDebug()<<"GPIO configured";
     pulseTimer=new QTimer;
     blinkTimer=new QTimer;

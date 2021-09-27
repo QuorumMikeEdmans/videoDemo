@@ -73,6 +73,7 @@ Item{
                 font.pixelSize: 18
             }
             SpinBox {
+                editable:true
                 font.pixelSize: spinBoxTextHeight
                 height: spinBoxHeight
                 from:0
@@ -92,7 +93,7 @@ Item{
                 font.pixelSize: 18
             }
             SpinBox {
-
+                editable:true
                 height: spinBoxHeight
                 font.pixelSize: spinBoxTextHeight
                 from: 0
@@ -119,6 +120,7 @@ Item{
                 height: spinBoxHeight
                 font.pixelSize: spinBoxTextHeight
                 enabled:!Stepper.infiniteCycle
+                editable:true
                 from: 1
                 to: 10000
                 //                maximumValue: 10000

@@ -46,4 +46,5 @@ unix|win32: LIBS += -lwiringPi
 
 HEADERS += \
     stepper.h \
-    imageFileInfo.h
+    imageFileInfo.h \
+    main.h

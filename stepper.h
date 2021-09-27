@@ -24,12 +24,16 @@ class Stepper : public QObject
     Q_PROPERTY(int cycleInterval_ms READ cycleInterval_ms WRITE  setcycleInterval_ms NOTIFY cycleInterval_msChanged)
     Q_PROPERTY(int cycleCount READ cycleCount WRITE  setcycleCount NOTIFY cycleCountChanged)
     Q_PROPERTY(QString cycleStatusText READ cycleStatusText NOTIFY cycleStatusTextChanged)
+//    Q_PROPERTY(QString filenameLastImage WRITE setFilenameLastImage)
 
 
     Q_PROPERTY(QString cycleSpeedDialText READ cycleSpeedDialText WRITE  setcycleSpeedDialText NOTIFY cycleSpeedDialTextChanged)
 
     Q_PROPERTY(bool infiniteCycle READ infiniteCycle WRITE  setinfiniteCycle NOTIFY infiniteCycleChanged)
     Q_PROPERTY(bool cycleRunning READ cycleRunning WRITE  setcycleRunning NOTIFY cycleRunningChanged)
+
+    Q_PROPERTY(int rotationPosition READ rotationPosition WRITE  setrotationPosition NOTIFY rotationPositionChanged)
+
 
 public:
     explicit Stepper(QObject *parent = nullptr);
@@ -74,6 +78,11 @@ public:
     void setinfiniteCycle(bool val){mb_infiniteCycle=val;infiniteCycleChanged();}
     QString speedDialText(void) {return strSpeedDialText;}
     void setcycleSpeedDialText(QString val){mstr_cycleSpeedDialText=val;cycleSpeedDialTextChanged();}
+    int rotationPosition(void){return mRotationPosition;}
+    void setrotationPosition(int val){mRotationPosition=val;rotationPositionChanged();}
+    float rotationAngle();
+//    void setFilenameLastImage(QString filename)
+
 
 
 signals:
@@ -95,6 +104,7 @@ signals:
     void cycleCountChanged();
     void cycleRunningChanged();
     void cycleStatusTextChanged();
+    void rotationPositionChanged();
 
 public slots:
     void rotate();
@@ -118,7 +128,8 @@ private:
     int microSteps=3200;
     int m_interval_ms=10;
 //    float gearRatio=2; // Debug only
-    float gearRatio=39.0/8.0;
+    float gearRatio=39.0f/8.0f;
+//    float gearRatio=1.0f;
     QString strSpeedDialText;
 
     int m_pauseTimeSeconds=20;
@@ -128,6 +139,7 @@ private:
     QString mstr_cycleSpeedDialText;
     bool mb_infiniteCycle;
     int numberSteps;
+    double rotateAngle=0;
 
 
     QTimer *pulseTimer;
@@ -142,9 +154,12 @@ private:
     int m_cycleCount;
     bool mb_cycleRunning=false;
     bool mbPause=false;
-    float rotationAngle(void);
     void continueCycle();
     int cycleStep=0;
+    int mRotationPosition=0;
+//    QString mstrFilenameLastImage;
+
+
 
 //#define CURRENT_ON_PIN  8
 //#define DIRECTION_PIN  9

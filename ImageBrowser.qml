@@ -11,19 +11,20 @@ Item {
     anchors.fill: parent
     property string selectedDate:listView.model[listView.currentIndex].date
     property string selectedTime:listView.model[listView.currentIndex].time
+    property string selectedPosition:listView.model[listView.currentIndex].position
     property bool displayWarningButton:false
 
     onVisibleChanged: {
-        if (visible)
-            ImageFileList.initialise()      // Load file
+//        if (visible)
+//            ImageFileList.initialise()      // Load file
     }
     Timer {
         id: startTimer
         running:false
         repeat: true
         interval:3000
-        onTriggered: if (parent.visible)
-                         ImageFileList.initialise()
+//        onTriggered: if (parent.visible)
+//                         ImageFileList.initialise()
     }
 
 
@@ -49,6 +50,11 @@ Item {
             width: 80
             height:20
             text: selectedTime
+        }
+        Text{
+            width: 80
+            height:20
+            text: selectedPosition
         }
     }
     ListView {
@@ -88,14 +94,19 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     font.bold: true
                 }
+                Text {
+                    text: position
+                    anchors.verticalCenter: parent.verticalCenter
+                    font.bold: true
+                }
                 spacing: 10
             }
         }
         model: imageFileList
 
-        Component.onCompleted: {
-            ImageFileList.initialise()      // Load file
-        }
+//        Component.onCompleted: {
+//            ImageFileList.initialise()      // Load file
+//        }
     }
     Button{
         id:btnClearFiles
