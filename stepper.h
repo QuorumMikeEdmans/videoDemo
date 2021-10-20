@@ -50,6 +50,7 @@ public:
 
     void setcycleCount(int val){m_cycleCount=val;cycleCountChanged();}
 
+    void initialiseCurrent(void);
 
     int pauseTimeSeconds(void) {return m_pauseTimeSeconds;}
     int numberCycles(void) {return m_numberCycles;}
@@ -116,6 +117,7 @@ public slots:
     void step(void);
     void startCycle();
     void stopCycle();
+    void setStepperCurrent(int currentSetting);
 
 private:
     int m_Position=300;
@@ -127,9 +129,7 @@ private:
     int degreesPerStep=180;
     int microSteps=3200;
     int m_interval_ms=10;
-//    float gearRatio=2; // Debug only
     float gearRatio=39.0f/8.0f;
-//    float gearRatio=1.0f;
     QString strSpeedDialText;
 
     int m_pauseTimeSeconds=20;
@@ -157,20 +157,24 @@ private:
     void continueCycle();
     int cycleStep=0;
     int mRotationPosition=0;
-//    QString mstrFilenameLastImage;
 
 
 
-//#define CURRENT_ON_PIN  8
-//#define DIRECTION_PIN  9
-//#define STEP_PIN  7
-//#define FAULT_PIN 5
-//#define ENABLE_LEVEL_CONVERTER_PIN 15
-#define CURRENT_ON_PIN  7
+#define CURRENT_ON_PIN  8
 #define DIRECTION_PIN  9
-#define STEP_PIN  8
+#define STEP_PIN  7
 #define FAULT_PIN 5
 #define ENABLE_LEVEL_CONVERTER_PIN 15
+
+// Use GPIO READALL to see a table of pin numbering including numbers to use for the WiringPi library
+#define ISET1 21
+#define ISET2 22
+#define ISET3 11
+#define ISET4 10
+#define ISET5 13
+#define ISET6 12
+
+
 
 #define ENABLE 0
 #define DISABLE 1

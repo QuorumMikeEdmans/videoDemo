@@ -81,7 +81,6 @@ void Stepper::continueCycle()
         m_cycleClockwise=true;
     }
     statusTimer->start(200);
-//    captureStillImage();
 }
 
 void Stepper::stopCycle()
@@ -162,7 +161,7 @@ void Stepper::onStatusTimer()
             }
             setcycleCount(m_cycleCount);
             pauseTimer->setSingleShot(true);
-            pauseTimer->start(m_pauseTimeSeconds*1000);
+//            pauseTimer->start(m_pauseTimeSeconds*1000);
             mbPause=true;
             setDriveEnabled(false);
         }
@@ -177,12 +176,11 @@ Stepper::Stepper(QObject *parent) : QObject(parent)
     pinMode(DIRECTION_PIN, OUTPUT);		// Configure GPIO0 as an output
     pinMode(STEP_PIN, OUTPUT);		// Configure GPIO0 as an output
     pinMode(FAULT_PIN, INPUT);
-//    pinMode(ENABLE_LEVEL_CONVERTER_PIN, OUTPUT);
     digitalWrite(CURRENT_ON_PIN, DISABLE);
     digitalWrite(DIRECTION_PIN, 0);
     digitalWrite(STEP_PIN, 0);
     digitalWrite(FAULT_PIN, 0);
-//    digitalWrite(ENABLE_LEVEL_CONVERTER_PIN, 1);        // Enable level converter
+    initialiseCurrent();
     qDebug()<<"GPIO configured";
     pulseTimer=new QTimer;
     blinkTimer=new QTimer;
@@ -191,7 +189,7 @@ Stepper::Stepper(QObject *parent) : QObject(parent)
     connect (pulseTimer,SIGNAL(timeout()),this,SLOT(onStepperTimer()));
     connect (blinkTimer,SIGNAL(timeout()),this,SLOT(onBlinkTimer()));
     connect (statusTimer,SIGNAL(timeout()),this,SLOT(onStatusTimer()));
-   connect (pauseTimer,SIGNAL(timeout()),this,SLOT(onPauseTimer()));
+    connect (pauseTimer,SIGNAL(timeout()),this,SLOT(onPauseTimer()));
 }
 
 void Stepper::setcycleRunning(bool val)
@@ -269,7 +267,6 @@ void Stepper::setSpeedDialText(int interval_ms)
 {
 
     float speedDegreesPerSec=static_cast<float>(degreesPerStep*1000)/(static_cast<float>(microSteps*interval_ms)*gearRatio);
-//    float speedDegreesPerSec=(float)(degreesPerStep*1000)/((float)(microSteps*interval_ms)*gearRatio);
     strSpeedDialText=QString::number(static_cast<double>(speedDegreesPerSec),'g',2);
     strSpeedDialText+=QString(" deg per sec");
     setSpeedDialText(strSpeedDialText);
@@ -278,10 +275,43 @@ void Stepper::setSpeedDialText(int interval_ms)
 void Stepper::setcycleSpeedDialText(int interval_ms)
 {
     float speedDegreesPerSec=static_cast<float>(degreesPerStep*1000)/(static_cast<float>(microSteps*interval_ms)*gearRatio);
-//    float speedDegreesPerSec=(float)(degreesPerStep*1000)/((float)(microSteps*interval_ms)*gearRatio);
     mstr_cycleSpeedDialText=QString::number(static_cast<double>(speedDegreesPerSec),'g',2);
     mstr_cycleSpeedDialText+=QString(" deg per sec");
     qDebug()<<mstr_cycleSpeedDialText;
     setcycleSpeedDialText(mstr_cycleSpeedDialText);
+
+}
+
+int pinsTable []=
+{ISET1, ISET2, ISET3, ISET4, ISET5, ISET6};
+
+void Stepper::initialiseCurrent(void)
+{
+    pinMode(ISET1, OUTPUT);
+    pinMode(ISET2, OUTPUT);
+    pinMode(ISET3, OUTPUT);
+    pinMode(ISET4, OUTPUT);
+    pinMode(ISET5, OUTPUT);
+    pinMode(ISET6, OUTPUT);
+
+    digitalWrite(ISET1, 1);                 // Use ISET1 on power up
+    digitalWrite(ISET2, 0);
+    digitalWrite(ISET3, 0);
+    digitalWrite(ISET4, 0);
+    digitalWrite(ISET5, 0);
+    digitalWrite(ISET6, 0);
+}
+
+
+void Stepper::setStepperCurrent(int currentSetting)
+{
+    digitalWrite(ISET1, 0);
+    digitalWrite(ISET2, 0);
+    digitalWrite(ISET3, 0);
+    digitalWrite(ISET4, 0);
+    digitalWrite(ISET5, 0);
+    digitalWrite(ISET6, 0);
+    int Port=pinsTable[currentSetting];
+    digitalWrite(Port, 1);		// Turn one output on and others off
 
 }

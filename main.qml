@@ -41,6 +41,7 @@ ApplicationWindow {
         Tab{ id:manualControl;title: "Manual Control";ManualControl{}}
         Tab{ title: "Cycle";CycleWindow{}}
         Tab{ id:imageBrowser;title: "Image Browser";ImageBrowser{}}
+        Tab{title: "Current Set";CurrentControl{}}
     }
 }
 

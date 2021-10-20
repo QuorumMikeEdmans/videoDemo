@@ -9,5 +9,6 @@
         <file>ImageBrowser.qml</file>
         <file>MyButton.qml</file>
         <file>Flasher.qml</file>
+        <file>CurrentControl.qml</file>
     </qresource>
 </RCC>
