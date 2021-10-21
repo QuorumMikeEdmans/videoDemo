@@ -299,7 +299,7 @@ void Stepper::initialiseCurrent(void)
     digitalWrite(ISET3, 0);
     digitalWrite(ISET4, 0);
     digitalWrite(ISET5, 0);
-    digitalWrite(ISET6, 0);
+    digitalWrite(ISET6, 1);
 }
 
 
@@ -311,7 +311,14 @@ void Stepper::setStepperCurrent(int currentSetting)
     digitalWrite(ISET4, 0);
     digitalWrite(ISET5, 0);
     digitalWrite(ISET6, 0);
-    int Port=pinsTable[currentSetting];
-    digitalWrite(Port, 1);		// Turn one output on and others off
+    if (currentSetting==0)
+    {
+        digitalWrite(ISET1, 1);		// To get minimum current, use R1 and R6 in parallel
+        digitalWrite(ISET6, 1);		//
+    }else
+    {
+        int Port=pinsTable[currentSetting-1];
+        digitalWrite(Port, 1);		// Turn one output on and others off
+    }
 
 }

@@ -29,43 +29,43 @@ Item{
             ButtonGroup{id: currentGroup}
 
             RadioButton {
+               id:button140mA
+               text: "140mA"
+               checked: true
+               ButtonGroup.group: currentGroup
+               onClicked: {Stepper.setStepperCurrent(0)}
+               }
+            RadioButton {
                id:button270mA
                text: "270mA"
                checked: true
                ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(0)}
+               onClicked: {Stepper.setStepperCurrent(1)}
                }
             RadioButton {
                id:button412mA
                text: "410mA"
                checked: false
                ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(1)}
+               onClicked: {Stepper.setStepperCurrent(2)}
                }
             RadioButton {
                id:button620mA
                text: "620mA"
                checked: false
                ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(2)}
+               onClicked: {Stepper.setStepperCurrent(3)}
                }
             RadioButton {
                id:button910mA
                text: "900mA"
                checked: false
                ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(3)}
+               onClicked: {Stepper.setStepperCurrent(4)}
                }
             RadioButton {
                id:button1500mA
                text: "1500mA"
-               checked: false
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(4)}
-               }
-            RadioButton {
-               id:button2200mA
-               text: "2200mA"
                checked: false
                ButtonGroup.group: currentGroup
                onClicked: {Stepper.setStepperCurrent(5)}
