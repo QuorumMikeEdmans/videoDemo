@@ -294,12 +294,12 @@ void Stepper::initialiseCurrent(void)
     pinMode(ISET5, OUTPUT);
     pinMode(ISET6, OUTPUT);
 
-    digitalWrite(ISET1, 1);                 // Use ISET1 on power up
+    digitalWrite(ISET1, 1);                 // 140mA default
     digitalWrite(ISET2, 0);
     digitalWrite(ISET3, 0);
     digitalWrite(ISET4, 0);
     digitalWrite(ISET5, 0);
-    digitalWrite(ISET6, 1);
+    digitalWrite(ISET6, 1);                 // 140mA default
 }
 
 
@@ -311,14 +311,50 @@ void Stepper::setStepperCurrent(int currentSetting)
     digitalWrite(ISET4, 0);
     digitalWrite(ISET5, 0);
     digitalWrite(ISET6, 0);
-    if (currentSetting==0)
+    switch (currentSetting)
+    {
+        case 0:
+        {
+            digitalWrite(ISET1, 1);		// To get minimum current, use R1 and R6 in parallel
+            digitalWrite(ISET6, 1);		//
+            break;
+        }
+        case 1:
+        {
+            digitalWrite(ISET1, 1);		// To get minimum current, use R1 and R6 in parallel
+            digitalWrite(ISET2, 1);		//
+            break;
+        }
+        case 2:
+        {
+            digitalWrite(ISET1, 1);		// To get minimum current, use R1 and R6 in parallel
+            digitalWrite(ISET3, 1);		//
+            break;
+        }
+        case 3:
+        {
+            digitalWrite(ISET1, 1);		// To get minimum current, use R1 and R6 in parallel
+            digitalWrite(ISET4, 1);		//
+            break;
+        }
+    case 4:
     {
         digitalWrite(ISET1, 1);		// To get minimum current, use R1 and R6 in parallel
-        digitalWrite(ISET6, 1);		//
-    }else
-    {
-        int Port=pinsTable[currentSetting-1];
-        digitalWrite(Port, 1);		// Turn one output on and others off
+        digitalWrite(ISET5, 1);		//
+        break;
     }
-
+    case 5:
+    {
+        digitalWrite(ISET2, 1);		// To get minimum current, use R1 and R6 in parallel
+        digitalWrite(ISET4, 1);		//
+        digitalWrite(ISET5, 1);		// To get minimum current, use R1 and R6 in parallel
+        break;
+    }
+    default:
+    {
+        int Port=pinsTable[currentSetting-6];
+        digitalWrite(Port, 1);		// Turn one output on and others off
+        break;
+    }
+    }
 }
