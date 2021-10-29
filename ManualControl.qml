@@ -46,7 +46,7 @@ Item{
                 id: element
                 width: 160
                 height: 13
-                text: qsTr("Rotation / deg")
+                text: qsTr("Rotation / cycle")
                 font.pixelSize: 18
             }
             SpinBox {

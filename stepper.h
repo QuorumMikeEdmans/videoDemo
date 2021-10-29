@@ -127,7 +127,8 @@ private:
     bool m_cycleClockwise;
     bool m_driveEnabled=false;
     int degreesPerStep=180;
-    int microSteps=3200;
+    int microSteps=1649;
+//    int microSteps=3200;
     int m_interval_ms=10;
     float gearRatio=39.0f/8.0f;
     QString strSpeedDialText;
