@@ -60,6 +60,7 @@ void Stepper::startCycle()
     setrotationPosition(0);
     captureStillImage();
 }
+
 void Stepper::continueCycle()
 {
     pulseTimer->start(m_cycleInterval_ms);
@@ -161,7 +162,7 @@ void Stepper::onStatusTimer()
             }
             setcycleCount(m_cycleCount);
             pauseTimer->setSingleShot(true);
-//            pauseTimer->start(m_pauseTimeSeconds*1000);
+            pauseTimer->start(m_pauseTimeSeconds*1000);
             mbPause=true;
             setDriveEnabled(false);
         }

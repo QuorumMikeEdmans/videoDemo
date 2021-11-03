@@ -1,13 +1,9 @@
-//import QtQuick 2.11
-//import QtQuick.Controls 2.4
-//import QtQuick.Controls 1.4
 
 import QtQuick 2.9
 import QtQuick.Controls 2.2
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Layouts 1.3
 import QtQuick.Window 2.2
-//import QtQuick.VirtualKeyboard 2.2
 import QtMultimedia 5.0
 import quorum.stepper 1.0
 
@@ -78,8 +74,6 @@ Item{
                 height: spinBoxHeight
                 from:0
                 to:360
-//                maximumValue: 360
-//                minimumValue: 0
                 value:180
                 stepSize: 5
                 onValueChanged: Stepper.cycleRotationDegrees=value
@@ -123,8 +117,6 @@ Item{
                 editable:true
                 from: 1
                 to: 10000
-                //                maximumValue: 10000
-                //                minimumValue: 1
                 value:1000
                 stepSize: 10
                 onValueChanged: {
@@ -138,8 +130,8 @@ Item{
                 }
             }
         }
-Row{
-    spacing:20
+        Row{
+        spacing:20
         Dial {
             id: dial
             width: 65
@@ -180,26 +172,6 @@ Row{
                 text:Stepper.cycleSpeedDialText
             }
         }
-//        Row{
-//            Button{
-//                width: 60
-//                height: 25
-//                text: "Start"
-//                onClicked:
-//                {
-//                    Stepper.startCycle()
-//                }
-//            }
-//            Button{
-//                width: 60
-//                height: 25
-//                text: "Stop"
-//                onClicked:
-//                {
-//                    Stepper.stopCycle()
-//                }
-//            }
-//        }
     }
 
 }
