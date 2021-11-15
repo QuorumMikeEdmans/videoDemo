@@ -97,12 +97,20 @@ Item{
                 onValueChanged: Stepper.pauseTimeSeconds=value
             }
         }
+        Row{
+
+
         CheckBox{
             text:"Infinite Cycle"
             checked:true
             onCheckedChanged: Stepper.infiniteCycle=checked
         }
-
+        CheckBox{
+            text:"Gear ratio 16/75"
+            checked:false
+            onCheckedChanged: Stepper.alternativeGearRatio=checked
+        }
+        }
         Row{
             Text {
                 width: 160

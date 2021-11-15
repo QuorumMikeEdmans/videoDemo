@@ -30,6 +30,7 @@ class Stepper : public QObject
     Q_PROPERTY(QString cycleSpeedDialText READ cycleSpeedDialText WRITE  setcycleSpeedDialText NOTIFY cycleSpeedDialTextChanged)
 
     Q_PROPERTY(bool infiniteCycle READ infiniteCycle WRITE  setinfiniteCycle NOTIFY infiniteCycleChanged)
+    Q_PROPERTY(bool alternativeGearRatio  WRITE  setAlternativeGearRatio )
     Q_PROPERTY(bool cycleRunning READ cycleRunning WRITE  setcycleRunning NOTIFY cycleRunningChanged)
 
     Q_PROPERTY(int rotationPosition READ rotationPosition WRITE  setrotationPosition NOTIFY rotationPositionChanged)
@@ -77,6 +78,7 @@ public:
     void setSpeedDialText(int interval_10ms);
     void setcycleSpeedDialText(int interval_10ms);
     void setinfiniteCycle(bool val){mb_infiniteCycle=val;infiniteCycleChanged();}
+    void setAlternativeGearRatio (bool val);
     QString speedDialText(void) {return strSpeedDialText;}
     void setcycleSpeedDialText(QString val){mstr_cycleSpeedDialText=val;cycleSpeedDialTextChanged();}
     int rotationPosition(void){return mRotationPosition;}

@@ -37,8 +37,6 @@ Item{
         onTriggered: {
             if (parent.visible)
             {
-                console.log(camera.cameraState)
-                console.log(camera.cameraStatus)
                 if (camera.cameraState==0)
                     camera.start()
             }

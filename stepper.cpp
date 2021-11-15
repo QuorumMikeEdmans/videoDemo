@@ -283,6 +283,16 @@ void Stepper::setcycleSpeedDialText(int interval_ms)
 
 }
 
+void Stepper::setAlternativeGearRatio(bool val)
+{
+    qDebug()<<gearRatio;
+    if (val)
+        gearRatio=39.0f*75.0f/(16.0f*8.0f);
+    else
+        gearRatio=39.0f/8.0f;
+    qDebug()<<gearRatio;
+}
+
 int pinsTable []=
 {ISET1, ISET2, ISET3, ISET4, ISET5, ISET6};
 

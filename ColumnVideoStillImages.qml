@@ -22,8 +22,6 @@ Column{
             onTriggered: {
                 if (parent.visible)
                 {
-                    console.log(camera.cameraState)
-                    console.log(camera.cameraStatus)
                     if (camera.cameraState==0)
                         camera.start()
                 }
@@ -36,7 +34,7 @@ Column{
                 if (camera.cameraState==Camera.ActiveState)
                 {
                     camera.captureMode=Camera.CaptureStillImage
-                    camera.imageCapture.captureToLocation("/home/pi/capturedImages")
+                    camera.imageCapture.captureToLocation("/home/pi/tempImages")
                     console.log("Capture Still image")
                 }else
                     console.log("Camera not active")

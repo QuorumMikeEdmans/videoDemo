@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include "QFile"
 #include "/usr/include/wiringPi.h"
 #include "stepper.h"
 #include "imageFileInfo.h"
@@ -40,6 +41,12 @@ QObject *getImageFileList()
 
 int main(int argc, char *argv[])
 {
+   QDir dir;
+   QDir dirToRemove("/home/pi/tempImages");
+   qDebug()<<    dirToRemove.removeRecursively();
+   qDebug()<<    dir.mkpath ("/home/pi/tempImages");
+   qDebug()<< dir.mkpath ("/home/pi/capturedImages");
+
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
     QGuiApplication app(argc, argv);
