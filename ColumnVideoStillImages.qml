@@ -56,8 +56,10 @@ Column{
            id: camera
            captureMode: Camera.CaptureVideo
            imageCapture {
-               onImageCaptured: {
-                   stillWindow.source = preview
+//               onImageCaptured: {
+               onImageSaved: {
+                   stillWindow.source = path
+                   console.log (path)
                    ImageFileList.addNewImage(camera.imageCapture.capturedImagePath, Stepper.rotationPosition)
                }
             }
