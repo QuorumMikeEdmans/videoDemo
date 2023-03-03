@@ -182,6 +182,7 @@ Stepper::Stepper(QObject *parent) : QObject(parent)
     digitalWrite(STEP_PIN, 0);
     digitalWrite(FAULT_PIN, 0);
     initialiseCurrent();
+    setStepperCurrent(12);
     qDebug()<<"GPIO configured";
     pulseTimer=new QTimer;
     blinkTimer=new QTimer;
@@ -344,11 +345,8 @@ void Stepper::setStepperCurrent(int currentSetting)
         digitalWrite(ISET5, 1);		//
         break;
     }
-    case 5:
+    case 12:
     {
-        digitalWrite(ISET2, 1);		// To get minimum current, use R1 and R6 in parallel
-        digitalWrite(ISET4, 1);		//
-        digitalWrite(ISET5, 1);		// To get minimum current, use R1 and R6 in parallel
         break;
     }
     default:

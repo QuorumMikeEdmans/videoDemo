@@ -23,66 +23,100 @@ Item{
     {
         title: "Stepper Current"
         topPadding: 8
-        Column{
-            spacing: 2
-            topPadding: 10
-            x:0
-            ButtonGroup{id: currentGroup}
+        ButtonGroup{id: currentGroup}
+        Row
+        {
+            spacing: 60
+            Column{
+                spacing: 2
+                topPadding: 10
+                x:0
 
-            RadioButton {
-               text: "140mA"
-               checked: true
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(0)}
-               }
-            RadioButton {
-               text: "163mA"
-               checked: true
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(1)}
-               }
-            RadioButton {
-               text: "188mA"
-               checked: false
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(2)}
-               }
-            RadioButton {
-               text: "208mA"
-               checked: false
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(3)}
-               }
-            RadioButton {
-               text: "228mA"
-               checked: false
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(4)}
-               }
-            RadioButton {
-               text: "238mA"
-               checked: false
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(5)}
-               }
-            RadioButton {
-               text: "270mA"
-               checked: false
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(6)}
-               }
-            RadioButton {
-               text: "412mA"
-               checked: false
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(7)}
-               }
-            RadioButton {
-               text: "620mA"
-               checked: false
-               ButtonGroup.group: currentGroup
-               onClicked: {Stepper.setStepperCurrent(8)}
-               }
+                RadioButton {
+                   text: "140mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(0)}
+                   }
+                RadioButton {
+                   text: "163mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(1)}
+                   }
+                RadioButton {
+                   text: "188mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(2)}
+                   }
+                RadioButton {
+                   text: "208mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(3)}
+                   }
+                RadioButton {
+                   text: "228mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(4)}
+                   }
+                RadioButton {
+                   text: "238mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(5)}
+                   }
+                RadioButton {
+                   text: "270mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(6)}
+                   }
+                RadioButton {
+                   text: "412mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(7)}
+                   }
+                RadioButton {
+                   text: "620mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(8)}
+                   }
+            }
+            Column{
+                spacing: 2
+                topPadding: 10
+                x:0
+
+                RadioButton {
+                   text: "910mA"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(9)}
+                   }
+                RadioButton {
+                   text: "1.5A"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(10)}
+                   }
+                RadioButton {
+                   text: "2.2A"
+                   checked: false
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(11)}
+                   }
+                RadioButton {
+                   text: "3.5A"
+                   checked: true
+                   ButtonGroup.group: currentGroup
+                   onClicked: {Stepper.setStepperCurrent(12)}
+                   }
+            }
         }
     }
 }
