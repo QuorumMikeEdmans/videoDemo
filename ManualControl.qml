@@ -6,10 +6,6 @@ import QtQuick.Window 2.2
 
 
 
-//import QtQuick 2.11
-//import QtQuick.Controls 2.4
-//import QtQuick.Controls 1.4
-//import QtQuick.Controls.Styles 1.4
 import QtMultimedia 5.0
 import quorum.stepper 1.0
 
@@ -21,8 +17,8 @@ Item{
     height: parent.height
 
     Column{
-        spacing: 9
-        topPadding: 20
+        spacing: 6
+        topPadding: 8
         x:0
 
 
@@ -45,10 +41,29 @@ Item{
             Text {
                 id: element
                 width: 160
-                height: 13
+                height: 11
                 text: qsTr("Rotation / cycle")
                 font.pixelSize: 18
             }
+            MyButton{
+                width: 30
+                height: 30
+                text: "<<<"
+                onClicked:{
+                    if (spinBox.value>180)
+                        spinBox.value-=180
+                }
+            }
+                MyButton{
+                    width: 30
+                    height: 30
+                    text: "<<"
+                    onClicked:{
+                        if (spinBox.value>45)
+                            spinBox.value-=45
+                    }
+            }
+
             SpinBox {
                 id: spinBox
                 to: 720
@@ -56,6 +71,23 @@ Item{
                 value:90
                 onValueChanged: Stepper.rotationDegrees=value
             }
+            MyButton{
+                width: 30
+                height: 30
+                text: ">>"
+                onClicked:{
+                        spinBox.value+=45
+                }
+            }
+                MyButton{
+                    width: 30
+                    height: 30
+                    text: ">>>"
+                    onClicked:{
+                            spinBox.value+=180
+                    }
+                }
+
         }
         Row {
 //             ExclusiveGroup { id: direction }
@@ -97,7 +129,7 @@ Item{
         MyButton{
             id: stopButton
             width: 100
-            height: 40
+            height: 30
             text: "Stop"
             onClicked:{
                 Stepper.stop();
@@ -106,7 +138,7 @@ Item{
         MyButton{
             id: stepButton
             width: 100
-            height: 40
+            height: 30
             text: "Step"
             onClicked:{
                 Stepper.step();
@@ -116,8 +148,8 @@ Item{
 
         Dial {
             id: dial
-            width: 98
-            height: 104
+            width: 90
+            height: 98
             from:20
             to:1
             onValueChanged: Stepper.interval_10ms=value
