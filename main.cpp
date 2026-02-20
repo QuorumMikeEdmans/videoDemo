@@ -4,7 +4,12 @@
 #include "stepper.h"
 #include "imageFileInfo.h"
 
+
+QQmlApplicationEngine *pEngine;
+
 QObject *stepper_singleton_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
+
+
 //QQmlEngine *engine, QJSEngine *scriptEngine
 //Stepper *Stepper::getInstance()
 {
@@ -14,6 +19,7 @@ QObject *stepper_singleton_provider(QQmlEngine *engine, QJSEngine *scriptEngine)
 
     if (m_Stepper==nullptr)
         m_Stepper=new Stepper();
+    m_Stepper->engine=pEngine;
     return m_Stepper;
 }
 ImageFileList *m_FileList=nullptr;
@@ -46,6 +52,8 @@ int main(int argc, char *argv[])
     qDebug("Started main.cpp");
 
     QQmlApplicationEngine engine;
+    pEngine =&engine;
+
     qmlRegisterSingletonType<Stepper>("quorum.stepper", 1, 0, "Stepper", stepper_singleton_provider);
     qmlRegisterSingletonType<ImageFileList>("quorum.imageFileList", 1, 0, "ImageFileList", imageFileList_singleton_provider);
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));

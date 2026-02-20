@@ -10,5 +10,7 @@
         <file>MyButton.qml</file>
         <file>Flasher.qml</file>
         <file>CurrentControl.qml</file>
+        <file>RotationsColumn.qml</file>
+        <file>RotationControl.qml</file>
     </qresource>
 </RCC>

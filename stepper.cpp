@@ -143,11 +143,11 @@ void Stepper::onStatusTimer()
 
     if ( --steps<=0)
     {
-        pulseTimer->stop();
-        setRotating(false);
-        setDriveEnabled(false);
         if (mb_cycleRunning)
         {
+            pulseTimer->stop();
+            setRotating(false);
+            setDriveEnabled(false);
             captureStillImage();
             mRotationPosition+=cycleRotationDegrees();
             setrotationPosition(mRotationPosition);
@@ -165,6 +165,27 @@ void Stepper::onStatusTimer()
             pauseTimer->start(m_pauseTimeSeconds*1000);
             mbPause=true;
             setDriveEnabled(false);
+        }
+        if (mb_torqueTestRunning)
+        {
+            captureStillImage();
+            mRotationPosition+=cycleRotationDegrees();
+            setrotationPosition(mRotationPosition);
+            nextTorqueTestStep();
+//            if (++cycleStep==4)
+//            {
+//                if (m_cycleCount++>=m_numberCycles && !mb_infiniteCycle)
+//                {
+//                    stopCycle();
+//                    return;
+//                }
+//                cycleStep=0;
+//            }
+//            setcycleCount(m_cycleCount);
+//            pauseTimer->setSingleShot(true);
+//            pauseTimer->start(m_pauseTimeSeconds*1000);
+//            mbPause=true;
+//            setDriveEnabled(false);
         }
     }
 }
@@ -199,6 +220,7 @@ void Stepper::setcycleRunning(bool val)
     mb_cycleRunning=val;
     cycleRunningChanged();
 }
+
 
 QString Stepper::cycleStatusText()
 {
@@ -339,21 +361,107 @@ void Stepper::setStepperCurrent(int currentSetting)
             digitalWrite(ISET4, 1);		//
             break;
         }
-    case 4:
+        case 4:
+        {
+            digitalWrite(ISET1, 1);		// To get minimum current, use R1 and R6 in parallel
+            digitalWrite(ISET5, 1);		//
+            break;
+        }
+        case 12:
+        {
+            break;
+        }
+        default:
+        {
+            int Port=pinsTable[currentSetting-6];
+            digitalWrite(Port, 1);		// Turn one output on and others off
+            break;
+        }
+    }
+}
+
+void Stepper::startTorqueTest()
+{
+    QVariant v = rotationStepsObject->property("rotationValues");
+    rotationStepList = v.toList();
+    sizeRotationStepList=rotationStepList.size();
+    for (int i = 0; i < sizeRotationStepList; ++i) {
+        int value = rotationStepList[i].toInt();
+        qDebug() << "Rotation" << i << ":" << value;
+    }
+
+    setcycleCount(1);
+    cycleStep=0;
+    setTorqueTestRunning(true);
+    setDriveEnabled(true);
+    pulseTimer->start(m_cycleInterval_ms);
+    blinkTimer->start(500);
+    setBlinkOn(true);
+    setRotating(true);
+    indexRotationStepList=0;
+    setTorqueTestCycleCount(indexRotationStepList);
+
+    m_cycleRotationDegrees=rotationStepList[indexRotationStepList++].toInt();
+    if (m_cycleRotationDegrees <0 )
     {
-        digitalWrite(ISET1, 1);		// To get minimum current, use R1 and R6 in parallel
-        digitalWrite(ISET5, 1);		//
-        break;
-    }
-    case 12:
+        m_cycleClockwise=false;
+        m_cycleRotationDegrees=-m_cycleRotationDegrees;         // Negative angle = anticlockwise
+    }else
+        m_cycleClockwise=true;
+    numberSteps=gearRatio*m_cycleRotationDegrees*microSteps/degreesPerStep;
+    steps=numberSteps;
+    qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
+    m_cycleClockwise=true;
+    if (m_cycleClockwise)
+        digitalWrite(DIRECTION_PIN,1);
+    else
+        digitalWrite(DIRECTION_PIN,0);
+    digitalWrite(CURRENT_ON_PIN,ENABLE);
+    statusTimer->start(200);
+    setrotationPosition(0);
+}
+
+void Stepper::nextTorqueTestStep()
+{
+    if (indexRotationStepList<sizeRotationStepList)
+        m_cycleRotationDegrees=rotationStepList[indexRotationStepList++].toInt();
+    else stopTorqueTest();
+    setTorqueTestCycleCount(indexRotationStepList);
+    if (m_cycleRotationDegrees <0 )
     {
-        break;
-    }
-    default:
-    {
-        int Port=pinsTable[currentSetting-6];
-        digitalWrite(Port, 1);		// Turn one output on and others off
-        break;
-    }
-    }
+        m_cycleClockwise=false;
+        m_cycleRotationDegrees=-m_cycleRotationDegrees;         // Negative angle = anticlockwise
+    }else
+        m_cycleClockwise=true;
+    numberSteps=gearRatio*m_cycleRotationDegrees*microSteps/degreesPerStep;
+    steps=numberSteps;
+    qDebug()<<"steps "<<steps<<m_cycleRotationDegrees<<microSteps<<degreesPerStep;
+    if (m_cycleClockwise)
+        digitalWrite(DIRECTION_PIN,1);
+    else
+        digitalWrite(DIRECTION_PIN,0);
+
+}
+
+void Stepper::setRotationsObject(QObject *obj)
+{
+    rotationStepsObject =obj;
+
+}
+
+void Stepper::stopTorqueTest()
+{
+    setTorqueTestRunning(false);
+    setDriveEnabled(false);
+    pulseTimer->stop();
+    blinkTimer->stop();
+    setBlinkOn(false);
+    setRotating(false);
+    statusTimer->stop();
+
+}
+void Stepper::setTorqueTestRunning(bool val)
+{
+    mb_torqueTestRunning=val;
+    torqueTestCycleCountChanged();
 }

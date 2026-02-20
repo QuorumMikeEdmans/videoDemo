@@ -10,7 +10,7 @@ ApplicationWindow {
     visible: true
     width: 800
     height: 480
-    title: qsTr("Ken's Super Stepper")
+    title: qsTr("Derick's Big Torque Test")
 
     TabView
     {
@@ -38,6 +38,12 @@ ApplicationWindow {
 //            }
         }
         height: 480
+        Tab{ id:torqueTest ;title: "Torque Test";
+            RotationsColumn{
+                objectName: "rotations"
+                Component.onCompleted: Stepper.setRotationsObject(this)
+            }
+        }
         Tab{ id:manualControl;title: "Manual Control";ManualControl{}}
         Tab{ title: "Cycle";CycleWindow{}}
         Tab{ id:imageBrowser;title: "Image Browser";ImageBrowser{}}

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QDebug>
+#include <QQmlApplicationEngine>
 
 class Stepper : public QObject
 {
@@ -23,6 +24,8 @@ class Stepper : public QObject
     Q_PROPERTY(int cycleRotationDegrees READ cycleRotationDegrees WRITE  setcycleRotationDegrees NOTIFY cycleRotationDegreesChanged)
     Q_PROPERTY(int cycleInterval_ms READ cycleInterval_ms WRITE  setcycleInterval_ms NOTIFY cycleInterval_msChanged)
     Q_PROPERTY(int cycleCount READ cycleCount WRITE  setcycleCount NOTIFY cycleCountChanged)
+    Q_PROPERTY(int torqueTestCycleCount READ torqueTestCycleCount WRITE  setTorqueTestCycleCount NOTIFY torqueTestCycleCountChanged)
+    Q_PROPERTY(int torqueTestRunning READ torqueTestRunning NOTIFY torqueTestCycleCountChanged)
     Q_PROPERTY(QString cycleStatusText READ cycleStatusText NOTIFY cycleStatusTextChanged)
 //    Q_PROPERTY(QString filenameLastImage WRITE setFilenameLastImage)
 
@@ -49,7 +52,7 @@ public:
     bool rotating(void){return mbRotating;}
 
     void setcycleCount(int val){m_cycleCount=val;cycleCountChanged();}
-
+    void setTorqueTestCycleCount(int val){iTorqueTestCycleCount=val;torqueTestCycleCountChanged();}
     void initialiseCurrent(void);
 
     int pauseTimeSeconds(void) {return m_pauseTimeSeconds;}
@@ -59,6 +62,7 @@ public:
     bool infiniteCycle(void){return mb_infiniteCycle;}
     bool cycleRunning(void){return mb_cycleRunning;}
     void setcycleRunning(bool val);
+    void setTorqueTestRunning(bool val);
 
 
     QString cycleSpeedDialText(void) {return mstr_cycleSpeedDialText;}
@@ -84,6 +88,10 @@ public:
     float rotationAngle();
 //    void setFilenameLastImage(QString filename)
 
+    QQmlApplicationEngine *engine;
+
+    int torqueTestCycleCount (void) {return iTorqueTestCycleCount;}
+    bool torqueTestRunning (void) { return mb_torqueTestRunning;}
 
 
 signals:
@@ -103,6 +111,7 @@ signals:
     void infiniteCycleChanged();
     void captureStillImage();
     void cycleCountChanged();
+    void torqueTestCycleCountChanged();
     void cycleRunningChanged();
     void cycleStatusTextChanged();
     void rotationPositionChanged();
@@ -118,6 +127,11 @@ public slots:
     void startCycle();
     void stopCycle();
     void setStepperCurrent(int currentSetting);
+    void startTorqueTest(void);
+    void nextTorqueTestStep(void);
+    void setRotationsObject(QObject *obj);
+    void stopTorqueTest(void);
+
 
 private:
     int m_Position=300;
@@ -133,6 +147,7 @@ private:
 //    float gearRatio=39.0f/8.0f;
     float gearRatio=5*39.0f/32.0f;
     QString strSpeedDialText;
+    int iTorqueTestCycleCount=0;
 
     int m_pauseTimeSeconds=20;
     int m_numberCycles=1000;
@@ -142,6 +157,10 @@ private:
     bool mb_infiniteCycle;
     int numberSteps;
     double rotateAngle=0;
+    QObject *rotationStepsObject;
+    QVariantList rotationStepList;
+    int indexRotationStepList;
+    int sizeRotationStepList;
 
 
     QTimer *pulseTimer;
@@ -155,6 +174,7 @@ private:
     bool m_blinkOn;
     int m_cycleCount;
     bool mb_cycleRunning=false;
+    bool mb_torqueTestRunning=false;
     bool mbPause=false;
     void continueCycle();
     int cycleStep=0;
