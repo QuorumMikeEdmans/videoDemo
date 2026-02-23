@@ -10,7 +10,7 @@ Item {
     anchors.top:parent.top
     anchors.topMargin: 15
 
-    property var rotationValues: [187, 140, 180, 90, 180, -194, -140, -180, -90, 180, 7]
+    property var rotationValues: [187, 140, 180, 90, 180, -194, -140, -180, -90, -180, 7]
 //    property var rotationValues: [45,120,90,87,180,270,15,30,60,135,300]
     property int currentCycle: 0
     property bool running: false
