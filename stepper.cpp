@@ -2,7 +2,7 @@
 #include "/usr/include/wiringPi.h"
 #include <QDebug>
 #include <QThread>
-
+#define BACKOFF_DEGREES 5
 
 void Stepper::rotate(void)
 {
@@ -171,21 +171,21 @@ void Stepper::onStatusTimer()
             captureStillImage();
             mRotationPosition+=cycleRotationDegrees();
             setrotationPosition(mRotationPosition);
-            nextTorqueTestStep();
-//            if (++cycleStep==4)
-//            {
-//                if (m_cycleCount++>=m_numberCycles && !mb_infiniteCycle)
-//                {
-//                    stopCycle();
-//                    return;
-//                }
-//                cycleStep=0;
-//            }
-//            setcycleCount(m_cycleCount);
-//            pauseTimer->setSingleShot(true);
-//            pauseTimer->start(m_pauseTimeSeconds*1000);
-//            mbPause=true;
-//            setDriveEnabled(false);
+            if (!backOffCompleted)          // After each rotation cycle, back off by 5 degress to get the torque reading
+            {
+                backOffCompleted=true;
+                m_cycleClockwise=!m_cycleClockwise;
+                steps=gearRatio*(float)BACKOFF_DEGREES*(float)microSteps/(float)degreesPerStep;
+                if (m_cycleClockwise)
+                    digitalWrite(DIRECTION_PIN,1);
+                else
+                    digitalWrite(DIRECTION_PIN,0);
+            }
+            else
+            {
+                backOffCompleted=false;
+                nextTorqueTestStep();
+            }
         }
     }
 }
@@ -389,7 +389,7 @@ void Stepper::startTorqueTest()
         int value = rotationStepList[i].toInt();
         qDebug() << "Rotation" << i << ":" << value;
     }
-
+    backOffCompleted=false;
     setcycleCount(1);
     cycleStep=0;
     setTorqueTestRunning(true);
@@ -424,9 +424,9 @@ void Stepper::startTorqueTest()
 void Stepper::nextTorqueTestStep()
 {
     if (indexRotationStepList<sizeRotationStepList)
-        m_cycleRotationDegrees=rotationStepList[indexRotationStepList++].toInt();
+        m_cycleRotationDegrees=rotationStepList[indexRotationStepList].toInt();
     else stopTorqueTest();
-    setTorqueTestCycleCount(indexRotationStepList);
+    setTorqueTestCycleCount(indexRotationStepList++);
     if (m_cycleRotationDegrees <0 )
     {
         m_cycleClockwise=false;

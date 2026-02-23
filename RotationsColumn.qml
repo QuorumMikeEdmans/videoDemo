@@ -76,7 +76,7 @@ Item {
 
                     Label {
                         anchors.centerIn: parent
-                        text: Stepper.torqueTestCycleCount
+                        text: Stepper.torqueTestCycleCount+1
                         font.pixelSize: 24
                         font.bold: true
                     }
@@ -84,7 +84,6 @@ Item {
 
                 Button {
                     text: "Start"
-                    enabled: !root.running
                     onClicked: {
                         Stepper.startTorqueTest()
                     }
@@ -92,7 +91,6 @@ Item {
 
                 Button {
                     text: "Stop"
-                    enabled: root.running
                     onClicked: {
                         Stepper.stopTorqueTest()
                 }
@@ -105,6 +103,17 @@ Item {
                     to:6
                     onValueChanged: Stepper.cycleInterval_ms=value
                 }
+                Column{
+                    spacing:5
+                    anchors.left: dial.horizontalCenter
+                    Text{
+                        text:"Speed:"
+                    }
+                    Text{
+                        text:Stepper.cycleSpeedDialText
+                    }
+                }
+
 
             }
     }

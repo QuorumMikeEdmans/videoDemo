@@ -35,14 +35,14 @@ Item {
             if (Stepper.torqueTestRunning)
             {
                 flashON=!flashON
-                if (Stepper.torqueTestCycleCount ==index)       // Blink box
+                if (Stepper.torqueTestCycleCount+1 ==index)       // Blink box
                 {
                     if (flashON)
                         backGroundColour="#00ff00"
                     else
                         backGroundColour="#ffffff"
                 }
-                else if (Stepper.torqueTestCycleCount >index)
+                else if (Stepper.torqueTestCycleCount+1 >index)
                 {
                         backGroundColour="#00ff00"
                 }
@@ -78,7 +78,7 @@ Item {
         spacing: 6
 
         Label {
-            text: "Rotation " + root.index
+            text: "Cycle " + root.index
             width: 120
             height: root.rowH
             font.pixelSize: root.fontPx

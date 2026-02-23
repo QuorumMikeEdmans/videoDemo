@@ -52,7 +52,10 @@ public:
     bool rotating(void){return mbRotating;}
 
     void setcycleCount(int val){m_cycleCount=val;cycleCountChanged();}
-    void setTorqueTestCycleCount(int val){iTorqueTestCycleCount=val;torqueTestCycleCountChanged();}
+    void setTorqueTestCycleCount(int val){
+        iTorqueTestCycleCount=val;
+        qDebug()<<"setTorqueTestCycleCount "<<iTorqueTestCycleCount;
+        torqueTestCycleCountChanged();}
     void initialiseCurrent(void);
 
     int pauseTimeSeconds(void) {return m_pauseTimeSeconds;}
@@ -161,6 +164,7 @@ private:
     QVariantList rotationStepList;
     int indexRotationStepList;
     int sizeRotationStepList;
+    bool backOffCompleted;
 
 
     QTimer *pulseTimer;
